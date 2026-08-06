@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
           <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-500 shadow-xl">
             <Shield size={32} />
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-white">Super Admin Portal</h1>
+          <h1 className="text-2xl font-black tracking-tight text-slate-100">Super Admin Portal</h1>
           <p className="text-xs text-slate-400">Enter master control credentials to access system</p>
         </div>
 

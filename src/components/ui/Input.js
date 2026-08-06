@@ -13,13 +13,14 @@ export default function Input({
   required = false,
   className = '',
   disabled = false,
+  showPasswordToggle = true,
   id,
   name,
   ...props
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
-  const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
+  const inputType = isPassword && showPasswordToggle ? (showPassword ? 'text' : 'password') : type;
 
   return (
     <div className={`space-y-1.5 ${className}`}>
@@ -47,7 +48,7 @@ export default function Input({
           className={`w-full bg-slate-800/80 border text-slate-100 placeholder-slate-500 rounded-xl text-sm py-2.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
             Icon ? 'pl-10' : 'pl-3.5'
           } ${
-            isPassword ? 'pr-10' : 'pr-3.5'
+            isPassword && showPasswordToggle ? 'pr-10' : 'pr-3.5'
           } ${
             error 
               ? 'border-rose-500 focus:border-rose-500' 
@@ -56,7 +57,7 @@ export default function Input({
           {...props}
         />
 
-        {isPassword && (
+        {isPassword && showPasswordToggle && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}

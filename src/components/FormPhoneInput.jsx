@@ -19,8 +19,8 @@ const FormPhoneInput = ({ label, value, onChange, error, required, defaultCountr
     return (
         <div className="flex flex-col gap-1.5 w-full">
             {label && (
-                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                    {label} {required && <span className="text-rose-500">*</span>}
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                    {label} {required && <span className="text-amber-500">*</span>}
                 </label>
             )}
             <PhoneInput
@@ -36,33 +36,35 @@ const FormPhoneInput = ({ label, value, onChange, error, required, defaultCountr
                 className='w-full'
                 inputStyle={{
                     width: '100%',
-                    height: '44px',
+                    height: '42px', // Match standard Input height
                     fontSize: '14px',
                     borderRadius: '0 12px 12px 0',
-                    border: error ? '1px solid #f43f5e' : '1px solid #334155',
+                    border: error ? '1px solid #f43f5e' : '1px solid var(--slate-700)',
                     borderLeft: 'none',
-                    color: '#f8fafc',
-                    backgroundColor: 'rgba(30, 41, 59, 0.8)',
+                    color: 'var(--slate-100)',
+                    backgroundColor: 'var(--slate-800)',
                     paddingLeft: '12px',
                     fontFamily: 'inherit',
-                    outline: 'none'
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
                 }}
                 countrySelectorStyleProps={{
                     buttonStyle: {
-                        height: '44px',
+                        height: '42px', // Match standard Input height
                         borderRadius: '12px 0 0 12px',
-                        border: error ? '1px solid #f43f5e' : '1px solid #334155',
+                        border: error ? '1px solid #f43f5e' : '1px solid var(--slate-700)',
                         borderRight: 'none',
-                        backgroundColor: 'rgba(30, 41, 59, 0.8)',
+                        backgroundColor: 'var(--slate-800)',
                         padding: '0 10px',
+                        transition: 'all 0.2s ease'
                     },
                     dropdownStyleProps: {
                         style: {
-                            backgroundColor: '#0f172a',
-                            color: '#f8fafc',
-                            border: '1px solid #334155',
+                            backgroundColor: 'var(--slate-900)',
+                            color: 'var(--slate-100)',
+                            border: '1px solid var(--slate-800)',
                             borderRadius: '12px',
-                            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.5)',
+                            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25)',
                             scrollbarWidth: 'thin'
                         }
                     }

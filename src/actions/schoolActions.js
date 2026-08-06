@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
-const API_URL = 'http://localhost:5000/api/admin';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
 
 export async function getSchoolsAction() {
   try {
@@ -87,3 +87,20 @@ export async function toggleSchoolStatusAction(id, status) {
     return { success: false, message: 'Failed to connect to server' };
   }
 }
+
+export async function getSchoolByIdAction(id) {
+  try {
+    const res = await getSchoolsAction();
+    if (res.success && Array.isArray(res.data)) {
+      const school = res.data.find(s => String(s.id) === String(id));
+      if (school) {
+        return { success: true, data: school };
+      }
+    }
+    return { success: false, message: 'School not found' };
+  } catch (error) {
+    console.error('Error fetching school by ID:', error);
+    return { success: false, message: 'Failed to fetch school details' };
+  }
+}
+

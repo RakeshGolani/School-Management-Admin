@@ -2,7 +2,7 @@
 
 import { setEncryptedCookie, getEncryptedCookie, deleteEncryptedCookie } from '@/lib/cookieHelper';
 
-const API_URL = 'http://localhost:5000/api/admin';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
 
 export async function adminLoginAction(formData) {
   try {
@@ -50,3 +50,40 @@ export async function adminLogoutAction() {
   await deleteEncryptedCookie('admin_session');
   return { success: true };
 }
+
+export async function updateAdminProfileAction(id, profileData) {
+  try {
+    const res = await fetch(`${API_URL}/profile/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profileData)
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Update admin profile action error:', error);
+    return { success: false, message: 'Server connectivity error' };
+  }
+}
+
+export async function updateAdminSessionAction(newUserData) {
+  try {
+    const session = await getEncryptedCookie('admin_session');
+    if (session) {
+      const updatedSession = {
+        ...session,
+        name: newUserData.name || session.name,
+        email: newUserData.email || session.email,
+        phone: newUserData.phone || session.phone
+      };
+      await setEncryptedCookie('admin_session', updatedSession);
+      return { success: true, user: updatedSession };
+    }
+    return { success: false, message: 'No active session found' };
+  } catch (error) {
+    console.error('Update admin session cookie error:', error);
+    return { success: false, message: 'Failed to update session cookie' };
+  }
+}
+

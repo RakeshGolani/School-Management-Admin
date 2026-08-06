@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
       {/* Top Banner */}
       <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white">Super Admin Dashboard</h1>
+          <h1 className="text-2xl font-black text-slate-100">Super Admin Dashboard</h1>
           <p className="text-xs text-slate-400 mt-1">Manage registered school institutions, credentials, and system settings.</p>
         </div>
         <Link href="/schools">
