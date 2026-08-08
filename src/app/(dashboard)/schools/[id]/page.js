@@ -31,8 +31,80 @@ import { notifySuccess, notifyError } from '@/lib/notify';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import SchoolDetailsSkeleton from '@/components/skeletons/SchoolDetailsSkeleton';
 
+function SchoolAcademicYearsList({ schoolId }) {
+  const [years, setYears] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadYears() {
+      try {
+        const res = await fetch(`http://localhost:5000/api/school/academic-years?school_id=${schoolId}`);
+        const data = await res.json();
+        if (data.success) {
+          setYears(data.data);
+        }
+      } catch (e) {
+        console.error('Failed to load school academic years', e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (schoolId) loadYears();
+  }, [schoolId]);
+
+  if (loading) {
+    return <div className="text-xs text-slate-500 py-4">Loading academic sessions...</div>;
+  }
+
+  if (years.length === 0) {
+    return (
+      <div className="text-xs text-slate-400 py-3 italic">
+        No academic years configured for this institution yet.
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-left text-xs">
+        <thead>
+          <tr className="text-slate-400 font-bold uppercase tracking-wider border-b border-slate-800/80 pb-2">
+            <th className="py-2.5 px-3">Session Name</th>
+            <th className="py-2.5 px-3">Start Date</th>
+            <th className="py-2.5 px-3">End Date</th>
+            <th className="py-2.5 px-3">Active Status</th>
+            <th className="py-2.5 px-3">Phase</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-800/60">
+          {years.map((y) => (
+            <tr key={y.id} className="hover:bg-slate-800/40 transition">
+              <td className="py-3 px-3 font-bold text-slate-200">{y.year_name}</td>
+              <td className="py-3 px-3 text-slate-400">{y.start_date}</td>
+              <td className="py-3 px-3 text-slate-400">{y.end_date}</td>
+              <td className="py-3 px-3">
+                {y.is_active ? (
+                  <Badge variant="success" className="px-2 py-0.5 text-[10px] font-extrabold">ACTIVE</Badge>
+                ) : (
+                  <span className="text-slate-500 font-semibold">Inactive</span>
+                )}
+              </td>
+              <td className="py-3 px-3">
+                <span className="text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                  {y.status}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function SchoolDetailsPage() {
   const { id } = useParams();
+
   const router = useRouter();
 
   const [school, setSchool] = useState(null);
@@ -301,6 +373,22 @@ export default function SchoolDetailsPage() {
           </div>
         </Card>
       </div>
+
+      {/* Card 3: School Academic Sessions Audit */}
+      <Card className="border-slate-800/80 bg-slate-900/50 backdrop-blur-md rounded-3xl p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
+          <div className="flex items-center gap-2.5">
+            <Calendar size={18} className="text-amber-400" />
+            <h3 className="text-sm font-extrabold text-slate-200 uppercase tracking-wider">Academic Years & Sessions</h3>
+          </div>
+          <span className="text-xs text-slate-400 font-semibold bg-slate-800 px-2.5 py-1 rounded-lg">
+            Multi-Session Scoped
+          </span>
+        </div>
+
+        <SchoolAcademicYearsList schoolId={school.id} />
+      </Card>
+
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
