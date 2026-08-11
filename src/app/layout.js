@@ -1,3 +1,4 @@
+// Trigger dev hot-reload cache invalidation
 import './globals.css';
 
 export const metadata = {
@@ -18,12 +19,12 @@ export default function RootLayout({ children }) {
                 } else {
                   document.documentElement.classList.remove('light');
                 }
-              } catch (e) {}
-            `
+              } catch (_) {}
+            `,
           }}
         />
       </head>
-      <body suppressHydrationWarning className="bg-slate-950 text-slate-100 antialiased min-h-screen">
+      <body className="antialiased selection:bg-amber-500 selection:text-slate-950 font-sans">
         {children}
       </body>
     </html>

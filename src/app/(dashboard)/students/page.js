@@ -417,23 +417,25 @@ export default function StudentsManagementPage() {
       header: 'Status',
       accessor: 'status',
       render: (student) => (
-        <button
-          onClick={() => handleToggleStatus(student)}
-          className="flex items-center gap-2 group cursor-pointer focus:outline-none"
-        >
-          <div className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out ${
-            student.status === 'active' ? 'bg-emerald-500' : 'bg-slate-700'
-          }`}>
-            <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out shadow-md ${
-              student.status === 'active' ? 'translate-x-4' : 'translate-x-0'
-            }`} />
-          </div>
-          <span className={`text-xs font-semibold capitalize ${
-            student.status === 'active' ? 'text-emerald-400' : 'text-slate-400'
-          }`}>
-            {student.status || 'inactive'}
-          </span>
-        </button>
+        <Tooltip content={student.status === 'active' ? 'Click to deactivate student' : 'Click to activate student'}>
+          <button
+            onClick={() => handleToggleStatus(student)}
+            className="flex items-center gap-2 group cursor-pointer focus:outline-none"
+          >
+            <div className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out ${
+              student.status === 'active' ? 'bg-emerald-500' : 'bg-slate-700'
+            }`}>
+              <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 ease-in-out shadow-md ${
+                student.status === 'active' ? 'translate-x-4' : 'translate-x-0'
+              }`} />
+            </div>
+            <span className={`text-xs font-semibold capitalize ${
+              student.status === 'active' ? 'text-emerald-400' : 'text-slate-400'
+            }`}>
+              {student.status || 'inactive'}
+            </span>
+          </button>
+        </Tooltip>
       )
     },
     {
@@ -493,14 +495,16 @@ export default function StudentsManagementPage() {
           </div>
         </div>
 
-        <Button 
-          onClick={openAddModal} 
-          icon={UserPlus}
-          variant="primary" 
-          className="rounded-2xl px-5 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-teal-500/25 shrink-0 self-start sm:self-auto"
-        >
-          New Admission
-        </Button>
+        <Tooltip content="Add a new student admission" position="left">
+          <Button 
+            onClick={openAddModal} 
+            icon={UserPlus}
+            variant="primary" 
+            className="rounded-2xl px-5 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-teal-500/25 shrink-0 self-start sm:self-auto"
+          >
+            New Admission
+          </Button>
+        </Tooltip>
       </div>
 
       {/* Overview Stats Bar */}

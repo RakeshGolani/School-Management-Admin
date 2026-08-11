@@ -235,14 +235,16 @@ export default function SchoolsManagementPage() {
       header: 'Status',
       accessor: 'status',
       render: (row) => (
-        <button
-          onClick={() => handleToggleStatus(row)}
-          className="cursor-pointer"
-        >
-          <Badge variant={row.status === 'active' ? 'success' : 'danger'}>
-            {row.status === 'active' ? 'Active' : 'Inactive'}
-          </Badge>
-        </button>
+        <Tooltip content={row.status === 'active' ? 'Click to deactivate school' : 'Click to activate school'}>
+          <button
+            onClick={() => handleToggleStatus(row)}
+            className="cursor-pointer"
+          >
+            <Badge variant={row.status === 'active' ? 'success' : 'danger'}>
+              {row.status === 'active' ? 'Active' : 'Inactive'}
+            </Badge>
+          </button>
+        </Tooltip>
       )
     },
     {
@@ -291,9 +293,11 @@ export default function SchoolsManagementPage() {
           <h1 className="text-2xl font-black text-slate-100">Registered Institutions</h1>
           <p className="text-xs text-slate-400">Super Admin institution portal & access control</p>
         </div>
-        <Button variant="primary" icon={Plus} onClick={openAddModal}>
-          Register New School
-        </Button>
+        <Tooltip content="Register a new school in the portal" position="left">
+          <Button variant="primary" icon={Plus} onClick={openAddModal}>
+            Register New School
+          </Button>
+        </Tooltip>
       </div>
 
       {/* Stats Cards */}

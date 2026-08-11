@@ -11,7 +11,8 @@ import {
   GraduationCap,
   ChevronsLeft,
   ChevronsRight,
-  CreditCard
+  CreditCard,
+  Receipt
 } from 'lucide-react';
 import { adminLogoutAction } from '@/actions/authActions';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -90,6 +91,7 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
     { label: 'Overview', href: '/dashboard', icon: Activity },
     { label: 'Schools Management', href: '/schools', icon: School },
     { label: 'Students Management', href: '/students', icon: GraduationCap },
+    { label: 'Transactions & Invoices', href: '/transactions', icon: Receipt },
     { label: 'Billing Settings', href: '/billing-settings', icon: CreditCard }
   ];
 

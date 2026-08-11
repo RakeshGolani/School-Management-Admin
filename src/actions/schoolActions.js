@@ -90,14 +90,12 @@ export async function toggleSchoolStatusAction(id, status) {
 
 export async function getSchoolByIdAction(id) {
   try {
-    const res = await getSchoolsAction();
-    if (res.success && Array.isArray(res.data)) {
-      const school = res.data.find(s => String(s.id) === String(id));
-      if (school) {
-        return { success: true, data: school };
-      }
-    }
-    return { success: false, message: 'School not found' };
+    const res = await fetch(`${API_URL}/schools/${id}`, {
+      method: 'GET',
+      cache: 'no-store'
+    });
+    const data = await res.json();
+    return data;
   } catch (error) {
     console.error('Error fetching school by ID:', error);
     return { success: false, message: 'Failed to fetch school details' };

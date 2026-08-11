@@ -174,7 +174,7 @@ export default function DataTable({
                 <tr key={row.id || rIdx} className="hover:bg-slate-800/20 transition-all duration-150">
                   {columns.map((col, cIdx) => (
                     <td key={cIdx} className={`py-4 px-4 ${col.className || ''}`}>
-                      {col.render ? col.render(row) : row[col.accessor]}
+                      {col.cell ? col.cell(row) : col.render ? col.render(row) : row[col.accessor]}
                     </td>
                   ))}
                 </tr>

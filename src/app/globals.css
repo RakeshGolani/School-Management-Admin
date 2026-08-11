@@ -102,6 +102,17 @@
     font-family: inherit;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
+
+  button,
+  a,
+  select,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="submit"],
+  input[type="button"] {
+    cursor: pointer !important;
+  }
 }
 
 .glass-panel {
@@ -220,14 +231,143 @@
   cursor: pointer;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-image: linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 0) 0%,
-    var(--primary-200) 45%,
-    var(--primary-400) 100%
-  );
+/* ========================================= */
+/*   PRINT STYLES FOR INVOICE PDF GENERATION */
+/* ========================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 5mm 6mm;
+  }
+  
+  html, body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide navigation, sidebar, headers, and action buttons */
+  aside, header, nav, button, .print\:hidden {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background-color: #ffffff !important;
+  }
+
+  /* Force all layout wrapper divs to expand fully in print */
+  div, main, section {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Print document layout - Single page fit with distinct card boxes & borders */
+  #invoice-document {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    padding: 16px 20px !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+
+    /* Flex layout to push bottom section to the bottom of the page */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 272mm !important;
+  }
+
+  #invoice-document * {
+    text-shadow: none !important;
+  }
+
+  /* Force standard dark text color during printing to prevent light grey text on white background */
+  #invoice-document,
+  #invoice-document div,
+  #invoice-document span,
+  #invoice-document p,
+  #invoice-document td,
+  #invoice-document th,
+  #invoice-document h1,
+  #invoice-document h2,
+  #invoice-document h3,
+  #invoice-document h4 {
+    color: #0f172a !important;
+  }
+
+  /* Retain correct green status colors */
+  #invoice-document .text-emerald-400,
+  #invoice-document .text-emerald-700,
+  #invoice-document .bg-emerald-500\/10,
+  #invoice-document .print-badge,
+  #invoice-document .print-badge * {
+    color: #065f46 !important;
+  }
+
+  /* Retain amber status colors */
+  #invoice-document .text-amber-400,
+  #invoice-document .print-amber-text,
+  #invoice-document .text-amber-700 {
+    color: #b45309 !important;
+  }
+
+  /* Retain helper muted text colors */
+  #invoice-document .text-slate-400,
+  #invoice-document .text-slate-500,
+  #invoice-document .text-slate-600,
+  #invoice-document .text-zinc-500,
+  #invoice-document .text-zinc-600 {
+    color: #475569 !important;
+  }
+
+  /* Distinct Layout Boxes / Cards for Print */
+  .print-card {
+    background-color: #f1f5f9 !important;
+    border: 1.5px solid #94a3b8 !important;
+    border-radius: 0.75rem !important;
+    padding: 12px 16px !important;
+  }
+
+  .print-badge {
+    background-color: #d1fae5 !important;
+    border: 1.5px solid #34d399 !important;
+    color: #065f46 !important;
+  }
+
+  .print-badge * {
+    color: #065f46 !important;
+  }
+
+  .print-amber-text {
+    color: #b45309 !important;
+  }
+
+  .print-table-header {
+    background-color: #e2e8f0 !important;
+  }
+
+  .print-table-header th {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    border-bottom: 1.5px solid #94a3b8 !important;
+  }
+
+  .print-pill {
+    background-color: #cbd5e1 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+  }
 }
-
-
-

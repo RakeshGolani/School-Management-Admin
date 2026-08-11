@@ -1,3 +1,4 @@
+// Trigger dev hot-reload cache invalidation
 import { cookies } from 'next/headers';
 import ClientLayout from '@/components/layout/ClientLayout';
 

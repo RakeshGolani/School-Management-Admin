@@ -1,8 +1,15 @@
-# AGENTS.md - Antigravity Agent & Workflow Guidelines
+# AGENTS.md — School-Management-Admin Rules
 
-## General Behavioral Rules
-1. **Design Excellence**: Ensure all UI implementations use modern, rich aesthetics, clear typography, and subtle micro-interactions.
-2. **Quality & Stability**: Never patch symptoms superficially. Always verify underlying component contracts and layout boundary behaviors.
-3. **Execution Verification**: Always run compilation/build verification to confirm changes work seamlessly.
-4. **Environment Configuration**: Always use environment variables (e.g., `process.env.NEXT_PUBLIC_API_URL`) for endpoint URLs. Avoid hardcoding ports and domains like `http://localhost:5000` inside action files or components.
-5. **Namespace Controller Segregation**: Maintain strict segregation between user roles. Admin-specific CRUD actions and listings should have dedicated controllers in the backend `Admin` namespace folder and route through `/api/admin/...`.
+## Architectural Guidelines
+- Role: SaaS Super Admin Dashboard for Managing Schools, Subscriptions, System Settings, & Billing Invoices.
+- Framework: Next.js App Router (React).
+- UI Components: Use `@/components/ui/` design system components for consistent tabular & modal management.
+- Backend API Integration: Server actions in `src/actions/` communicating with SaaS Backend services.
+- UI Pointer Rule: All clickable elements (`button`, `a`, `select`, `[role="button"]`, checkboxes, radios) MUST display `cursor: pointer` on hover.
+- Tooltip Rule: All key action buttons, table row actions (`View`, `Edit`, `Delete`), and status toggle controls MUST be wrapped with the `@/components/ui/Tooltip` component for clear user guidance.
+- Environment URL Rule: Never hardcode `http://localhost:...` endpoints directly in fetch/axios requests or image source strings. Always use dynamic environment variables (`process.env.NEXT_PUBLIC_BASE_URL` / `process.env.NEXT_PUBLIC_API_URL`) with fallback defaults.
+
+## Token Efficiency Rules
+1. Inspect files with `view_file` targeting line ranges to conserve context tokens.
+2. Edit target code using `replace_file_content` without rewriting entire components.
+3. Search for symbols with `grep_search` before modifying code.
