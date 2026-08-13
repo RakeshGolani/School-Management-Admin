@@ -203,9 +203,7 @@ export default function SchoolDetailsPage() {
 
   const { school, stats = {}, teachers = [], students = [], classes = [], subscription, transactions = [] } = detailData;
 
-  const logoUrl = school.logo 
-    ? (school.logo.startsWith('http') ? school.logo : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${school.logo}`)
-    : null;
+  const logoUrl = school.logo_url || school.logo || null;
 
   // Filtered lists
   const filteredTeachers = teachers.filter(t => 

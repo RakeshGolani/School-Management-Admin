@@ -209,7 +209,7 @@ export default function SchoolsManagementPage() {
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-xl bg-white border border-slate-700 flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
             {row.logo ? (
-              <img src={row.logo.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${row.logo}` : row.logo} alt="Logo" className="w-full h-full object-cover rounded-lg" />
+              <img src={row.logo_url || row.logo} alt="Logo" className="w-full h-full object-cover rounded-lg" />
             ) : (
               <School size={20} className="text-amber-500" />
             )}

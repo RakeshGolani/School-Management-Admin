@@ -176,7 +176,7 @@ export default function StudentsManagementPage() {
       is_bus_service_enabled: Boolean(student.is_bus_service_enabled),
       photo: null
     });
-    setPhotoPreview(student.photo ? (student.photo.startsWith('http') ? student.photo : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${student.photo}`) : null);
+    setPhotoPreview(student.image_url || student.photo || null);
     setFormErrors({});
     setModalOpen(true);
   };
@@ -321,23 +321,22 @@ export default function StudentsManagementPage() {
       header: 'Student Info',
       accessor: 'first_name',
       render: (student) => {
-        const photoUrl = student.photo 
-          ? (student.photo.startsWith('http') ? student.photo : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${student.photo}`)
-          : null;
+        const rawPhoto = student.image_url || student.photo;
+        const photoUrl = rawPhoto && !rawPhoto.includes('ui-avatars.com') ? rawPhoto : null;
 
         return (
           <div className="flex items-center space-x-3">
-            {photoUrl ? (
-              <img 
-                src={photoUrl} 
-                alt={student.first_name || 'Student'} 
-                className="w-10 h-10 rounded-full object-cover border border-slate-700/80 shadow-md shrink-0" 
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-slate-700 to-slate-800 flex items-center justify-center font-bold text-teal-400 text-sm border border-slate-700 shrink-0">
-                {student.first_name ? student.first_name[0].toUpperCase() : 'S'}
-              </div>
-            )}
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-slate-700 to-slate-800 flex items-center justify-center font-bold text-teal-400 text-sm border border-slate-700 shrink-0 overflow-hidden relative">
+              {photoUrl && (
+                <img 
+                  src={photoUrl} 
+                  alt={student.first_name || 'Student'} 
+                  className="w-full h-full object-cover relative z-10" 
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+              )}
+              <span className="text-teal-400 font-bold">{student.first_name ? student.first_name[0].toUpperCase() : 'S'}</span>
+            </div>
             <div className="min-w-0">
               <Link 
                 href={`/students/${student.id}`} 

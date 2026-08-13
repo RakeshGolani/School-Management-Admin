@@ -23,7 +23,8 @@ export default function StandalonePrintInvoicePage() {
   useEffect(() => {
     const fetchInvoice = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/transactions?limit=100`);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
+        const response = await fetch(`${apiUrl}/transactions?limit=100`);
         const data = await response.json();
         if (data.success && data.data) {
           const found = data.data.find(

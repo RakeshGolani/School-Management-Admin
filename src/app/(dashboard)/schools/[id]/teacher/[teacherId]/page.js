@@ -38,7 +38,8 @@ export default function AdminSchoolTeacherDetailsPage() {
     const fetchTeacherDetails = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/teachers/${teacherId}`, { cache: 'no-store' });
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
+        const res = await fetch(`${baseUrl}/api/teachers/${teacherId}`, { cache: 'no-store' });
         const resData = await res.json();
         const teacherInfo = resData.data || resData;
 

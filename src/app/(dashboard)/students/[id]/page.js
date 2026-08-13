@@ -133,7 +133,7 @@ export default function StudentDetailsPage() {
       is_bus_service_enabled: Boolean(student.is_bus_service_enabled),
       photo: null
     });
-    setPhotoPreview(student.photo ? (student.photo.startsWith('http') ? student.photo : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${student.photo}`) : null);
+    setPhotoPreview(student.image_url || student.photo || null);
     setFormErrors({});
     setModalOpen(true);
   };
@@ -229,9 +229,7 @@ export default function StudentDetailsPage() {
     { value: 'other', label: 'Other' }
   ];
 
-  const photoUrl = student.photo 
-    ? (student.photo.startsWith('http') ? student.photo : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${student.photo}`)
-    : null;
+  const photoUrl = student.image_url || student.photo || null;
 
   return (
     <div className="space-y-6 pb-12">
