@@ -166,9 +166,16 @@ export default function AdminProfilePage() {
   return (
     <div className="space-y-6">
       {/* Title Header */}
-      <div>
-        <h1 className="text-2xl font-black text-slate-100">Super Admin Profile</h1>
-        <p className="text-xs text-slate-400 mt-1">Manage your account details, phone configuration, and secure password credentials.</p>
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <User className="w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black text-slate-100">Super Admin Profile</h1>
+            <p className="text-xs text-slate-400 mt-1">Manage your account details, phone configuration, and secure password credentials.</p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

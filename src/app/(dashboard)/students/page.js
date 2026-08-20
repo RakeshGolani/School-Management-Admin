@@ -483,14 +483,14 @@ export default function StudentsManagementPage() {
   return (
     <div className="space-y-6 pb-12">
       {/* Header & Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-6 rounded-3xl border border-slate-800/80 backdrop-blur-xl shadow-xl">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-teal-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/20">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
             <GraduationCap className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-100 tracking-tight">Students Directory</h1>
-            <p className="text-sm text-slate-400">Manage student admissions, profiles, NFC cards & transport access</p>
+            <h1 className="text-2xl font-black text-slate-100 tracking-tight">Students Directory</h1>
+            <p className="text-xs text-slate-400 mt-1">Manage student admissions, profiles, NFC cards & transport access</p>
           </div>
         </div>
 
@@ -499,7 +499,6 @@ export default function StudentsManagementPage() {
             onClick={openAddModal} 
             icon={UserPlus}
             variant="primary" 
-            className="rounded-2xl px-5 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-semibold shadow-lg shadow-teal-500/25 shrink-0 self-start sm:self-auto"
           >
             New Admission
           </Button>

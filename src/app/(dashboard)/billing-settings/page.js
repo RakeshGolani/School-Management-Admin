@@ -89,10 +89,15 @@ export default function SuperAdminBillingSettingsPage() {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-500/20 via-slate-900 to-slate-900 border border-emerald-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-black text-slate-100">Global SaaS Billing Configurations</h1>
-          <p className="text-xs text-slate-400 mt-1">Configure pricing rates, seat taxes, and yearly subscription discounts dynamically.</p>
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <CreditCard className="w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black text-slate-100">Global SaaS Billing Configurations</h1>
+            <p className="text-xs text-slate-400 mt-1">Configure pricing rates, seat taxes, and yearly subscription discounts dynamically.</p>
+          </div>
         </div>
       </div>
 
