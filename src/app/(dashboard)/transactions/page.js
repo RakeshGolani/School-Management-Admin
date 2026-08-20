@@ -10,9 +10,12 @@ import {
   XCircle, 
   DollarSign, 
   Printer, 
-  Eye
+  Eye,
+  Plus
 } from 'lucide-react';
 import Select from '@/components/ui/Select';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 import Tooltip from '@/components/ui/Tooltip';
 import DataTable from '@/components/ui/DataTable';
 import Link from 'next/link';
@@ -31,6 +34,38 @@ export default function TransactionsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(1);
+
+  // Offline Payment Modal State
+  const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
+  const [schoolsList, setSchoolsList] = useState([]);
+  const [offlineForm, setOfflineForm] = useState({
+    school_id: '',
+    amount: '',
+    payment_method: 'Bank Transfer (NEFT/RTGS)',
+    reference_number: '',
+    plan_type: 'monthly',
+    max_students_limit: 50,
+    max_buses_limit: 5
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch Schools for Dropdown
+  const fetchSchoolsList = async () => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
+      const res = await fetch(`${apiUrl}/schools?limit=1000`);
+      const data = await res.json();
+      if (data.success && data.data) {
+        setSchoolsList(data.data.map(s => ({ value: s.id, label: `${s.school_name} (${s.code})` })));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSchoolsList();
+  }, []);
 
   const fetchTransactions = async () => {
     setLoading(true);
@@ -64,6 +99,38 @@ export default function TransactionsPage() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     fetchTransactions();
+  };
+
+  const handleOfflineSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
+      const res = await fetch(`${apiUrl}/transactions/offline`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(offlineForm)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsOfflineModalOpen(false);
+        fetchTransactions(); // refresh table
+        // Reset form
+        setOfflineForm({
+          school_id: '', amount: '', payment_method: 'Bank Transfer (NEFT/RTGS)',
+          reference_number: '', plan_type: 'monthly', max_students_limit: 50, max_buses_limit: 5
+        });
+      } else {
+        alert(data.message || 'Failed to record offline payment');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
 
@@ -200,15 +267,27 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        <Tooltip content="Refresh transaction logs" position="left">
-          <button
-            onClick={fetchTransactions}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-amber-500/10 border border-slate-700 hover:border-amber-500/30 text-slate-200 hover:text-amber-400 text-xs font-semibold transition cursor-pointer active:scale-95"
-          >
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-            <span>Refresh Data</span>
-          </button>
-        </Tooltip>
+        <div className="flex gap-2">
+          <Tooltip content="Record manual offline payment" position="left">
+            <button
+              onClick={() => setIsOfflineModalOpen(true)}
+              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold transition cursor-pointer shadow-lg active:scale-95"
+            >
+              <Plus size={14} />
+              <span>Record Offline Payment</span>
+            </button>
+          </Tooltip>
+
+          <Tooltip content="Refresh transaction logs" position="left">
+            <button
+              onClick={fetchTransactions}
+              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-amber-500/10 border border-slate-700 hover:border-amber-500/30 text-slate-200 hover:text-amber-400 text-xs font-semibold transition cursor-pointer active:scale-95"
+            >
+              <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+              <span>Refresh Data</span>
+            </button>
+          </Tooltip>
+        </div>
       </div>
 
       {/* Analytics Metric Cards */}
@@ -307,7 +386,108 @@ export default function TransactionsPage() {
         defaultSortDirection="desc"
       />
 
+      {/* Offline Payment Modal */}
+      {isOfflineModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+              <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <DollarSign className="text-amber-500" /> Record Offline Payment
+              </h3>
+              <button onClick={() => setIsOfflineModalOpen(false)} className="text-slate-400 hover:text-slate-600 transition">
+                <XCircle size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleOfflineSubmit} className="p-6 space-y-4">
+              <div className="space-y-4 text-slate-700 dark:text-slate-300">
+                
+                <div>
+                  <label className="block text-xs font-semibold mb-1">Select School</label>
+                  <Select 
+                    options={schoolsList} 
+                    value={offlineForm.school_id} 
+                    onChange={(v) => setOfflineForm({...offlineForm, school_id: v})}
+                    searchable 
+                  />
+                </div>
 
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold mb-1">Amount (₹)</label>
+                    <Input 
+                      type="number" 
+                      required
+                      value={offlineForm.amount} 
+                      onChange={(e) => setOfflineForm({...offlineForm, amount: e.target.value})} 
+                      placeholder="e.g. 15000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1">Payment Method</label>
+                    <Select 
+                      options={[
+                        {value: 'Bank Transfer (NEFT/RTGS)', label: 'Bank Transfer'},
+                        {value: 'Cheque', label: 'Cheque'},
+                        {value: 'Cash', label: 'Cash'}
+                      ]}
+                      value={offlineForm.payment_method} 
+                      onChange={(v) => setOfflineForm({...offlineForm, payment_method: v})} 
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold mb-1">Reference Number / UTR</label>
+                  <Input 
+                    type="text" 
+                    value={offlineForm.reference_number} 
+                    onChange={(e) => setOfflineForm({...offlineForm, reference_number: e.target.value})} 
+                    placeholder="e.g. HDFC12345678"
+                  />
+                </div>
+
+                <div className="border-t border-slate-200 dark:border-slate-800 pt-4 mt-4 grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold mb-1">Plan</label>
+                    <Select 
+                      options={[{value: 'monthly', label: 'Monthly'}, {value: 'yearly', label: 'Yearly'}]}
+                      value={offlineForm.plan_type} 
+                      onChange={(v) => setOfflineForm({...offlineForm, plan_type: v})} 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1">Students</label>
+                    <Input 
+                      type="number" 
+                      required
+                      value={offlineForm.max_students_limit} 
+                      onChange={(e) => setOfflineForm({...offlineForm, max_students_limit: e.target.value})} 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1">Buses</label>
+                    <Input 
+                      type="number" 
+                      required
+                      value={offlineForm.max_buses_limit} 
+                      onChange={(e) => setOfflineForm({...offlineForm, max_buses_limit: e.target.value})} 
+                    />
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="pt-4 flex justify-end gap-3">
+                <Button type="button" variant="outline" onClick={() => setIsOfflineModalOpen(false)}>Cancel</Button>
+                <Button type="submit" variant="primary" disabled={isSubmitting || !offlineForm.school_id}>
+                  {isSubmitting ? 'Recording...' : 'Record Payment & Upgrade'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );
