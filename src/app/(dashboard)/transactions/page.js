@@ -18,7 +18,9 @@ import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Tooltip from '@/components/ui/Tooltip';
 import DataTable from '@/components/ui/DataTable';
+import Drawer from '@/components/ui/Drawer';
 import Link from 'next/link';
+import { notifySuccess, notifyError } from '@/lib/notify';
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
@@ -102,7 +104,7 @@ export default function TransactionsPage() {
   };
 
   const handleOfflineSubmit = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setIsSubmitting(true);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
@@ -115,6 +117,7 @@ export default function TransactionsPage() {
       });
       const data = await res.json();
       if (data.success) {
+        notifySuccess(data.message || 'Offline payment recorded successfully');
         setIsOfflineModalOpen(false);
         fetchTransactions(); // refresh table
         // Reset form
@@ -123,11 +126,11 @@ export default function TransactionsPage() {
           reference_number: '', plan_type: 'monthly', max_students_limit: 50, max_buses_limit: 5
         });
       } else {
-        alert(data.message || 'Failed to record offline payment');
+        notifyError(data.message || 'Failed to record offline payment');
       }
     } catch (err) {
       console.error(err);
-      alert('Network error');
+      notifyError('Failed to record payment. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -386,108 +389,114 @@ export default function TransactionsPage() {
         defaultSortDirection="desc"
       />
 
-      {/* Offline Payment Modal */}
-      {isOfflineModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg border border-slate-200 dark:border-slate-800 overflow-hidden">
-            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
-              <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                <DollarSign className="text-amber-500" /> Record Offline Payment
-              </h3>
-              <button onClick={() => setIsOfflineModalOpen(false)} className="text-slate-400 hover:text-slate-600 transition">
-                <XCircle size={20} />
-              </button>
-            </div>
-            
-            <form onSubmit={handleOfflineSubmit} className="p-6 space-y-4">
-              <div className="space-y-4 text-slate-700 dark:text-slate-300">
-                
-                <div>
-                  <label className="block text-xs font-semibold mb-1">Select School</label>
-                  <Select 
-                    options={schoolsList} 
-                    value={offlineForm.school_id} 
-                    onChange={(v) => setOfflineForm({...offlineForm, school_id: v})}
-                    searchable 
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold mb-1">Amount (₹)</label>
-                    <Input 
-                      type="number" 
-                      required
-                      value={offlineForm.amount} 
-                      onChange={(e) => setOfflineForm({...offlineForm, amount: e.target.value})} 
-                      placeholder="e.g. 15000"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold mb-1">Payment Method</label>
-                    <Select 
-                      options={[
-                        {value: 'Bank Transfer (NEFT/RTGS)', label: 'Bank Transfer'},
-                        {value: 'Cheque', label: 'Cheque'},
-                        {value: 'Cash', label: 'Cash'}
-                      ]}
-                      value={offlineForm.payment_method} 
-                      onChange={(v) => setOfflineForm({...offlineForm, payment_method: v})} 
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold mb-1">Reference Number / UTR</label>
-                  <Input 
-                    type="text" 
-                    value={offlineForm.reference_number} 
-                    onChange={(e) => setOfflineForm({...offlineForm, reference_number: e.target.value})} 
-                    placeholder="e.g. HDFC12345678"
-                  />
-                </div>
-
-                <div className="border-t border-slate-200 dark:border-slate-800 pt-4 mt-4 grid grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold mb-1">Plan</label>
-                    <Select 
-                      options={[{value: 'monthly', label: 'Monthly'}, {value: 'yearly', label: 'Yearly'}]}
-                      value={offlineForm.plan_type} 
-                      onChange={(v) => setOfflineForm({...offlineForm, plan_type: v})} 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold mb-1">Students</label>
-                    <Input 
-                      type="number" 
-                      required
-                      value={offlineForm.max_students_limit} 
-                      onChange={(e) => setOfflineForm({...offlineForm, max_students_limit: e.target.value})} 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold mb-1">Buses</label>
-                    <Input 
-                      type="number" 
-                      required
-                      value={offlineForm.max_buses_limit} 
-                      onChange={(e) => setOfflineForm({...offlineForm, max_buses_limit: e.target.value})} 
-                    />
-                  </div>
-                </div>
-
-              </div>
-
-              <div className="pt-4 flex justify-end gap-3">
-                <Button type="button" variant="outline" onClick={() => setIsOfflineModalOpen(false)}>Cancel</Button>
-                <Button type="submit" variant="primary" disabled={isSubmitting || !offlineForm.school_id}>
-                  {isSubmitting ? 'Recording...' : 'Record Payment & Upgrade'}
-                </Button>
-              </div>
-            </form>
+      {/* Offline Payment Slide-Over Drawer */}
+      <Drawer
+        isOpen={isOfflineModalOpen}
+        onClose={() => setIsOfflineModalOpen(false)}
+        title="Record Offline Payment"
+        subtitle="Manually credit subscription fee & update school limits"
+        icon={DollarSign}
+        maxWidth="max-w-xl"
+        footer={
+          <div className="flex items-center justify-end gap-3">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => setIsOfflineModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="button" 
+              variant="primary" 
+              loading={isSubmitting}
+              disabled={isSubmitting || !offlineForm.school_id}
+              onClick={handleOfflineSubmit}
+            >
+              Record Payment & Upgrade
+            </Button>
           </div>
-        </div>
-      )}
+        }
+      >
+        <form onSubmit={handleOfflineSubmit} className="space-y-5">
+          <Select 
+            label="Select School"
+            required
+            options={schoolsList} 
+            value={offlineForm.school_id} 
+            onChange={(v) => setOfflineForm({...offlineForm, school_id: v})}
+            searchable
+            placeholder="Select a school"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input 
+              label="Amount (₹)"
+              type="number" 
+              required
+              value={offlineForm.amount} 
+              onChange={(e) => setOfflineForm({...offlineForm, amount: e.target.value})} 
+              placeholder="e.g. 15000"
+            />
+            <Select 
+              label="Payment Method"
+              required
+              options={[
+                { value: 'Bank Transfer (NEFT/RTGS)', label: 'Bank Transfer (NEFT/RTGS)' },
+                { value: 'Cheque', label: 'Cheque' },
+                { value: 'Cash', label: 'Cash' },
+                { value: 'UPI / QR', label: 'UPI / QR' }
+              ]}
+              value={offlineForm.payment_method} 
+              onChange={(v) => setOfflineForm({...offlineForm, payment_method: v})} 
+            />
+          </div>
+
+          <Input 
+            label="Reference Number / UTR"
+            type="text" 
+            value={offlineForm.reference_number} 
+            onChange={(e) => setOfflineForm({...offlineForm, reference_number: e.target.value})} 
+            placeholder="e.g. HDFC12345678"
+          />
+
+          {/* Plan & Resource Capacity */}
+          <div className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/90 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                Subscription & Capacity Allocation
+              </span>
+              <span className="text-[11px] text-slate-500 font-medium">Applied instantly</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Select 
+                label="Plan"
+                options={[
+                  { value: 'monthly', label: 'Monthly' },
+                  { value: 'yearly', label: 'Yearly' }
+                ]}
+                value={offlineForm.plan_type} 
+                onChange={(v) => setOfflineForm({...offlineForm, plan_type: v})} 
+              />
+              <Input 
+                label="Students"
+                type="number" 
+                required
+                value={offlineForm.max_students_limit} 
+                onChange={(e) => setOfflineForm({...offlineForm, max_students_limit: e.target.value})} 
+              />
+              <Input 
+                label="Buses"
+                type="number" 
+                required
+                value={offlineForm.max_buses_limit} 
+                onChange={(e) => setOfflineForm({...offlineForm, max_buses_limit: e.target.value})} 
+              />
+            </div>
+          </div>
+        </form>
+      </Drawer>
 
     </div>
   );

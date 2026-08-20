@@ -39,6 +39,7 @@ import { getSchoolsAction } from '@/actions/schoolActions';
 import { notifySuccess, notifyError } from '@/lib/notify';
 import StudentTableSkeleton from '@/components/skeletons/StudentTableSkeleton';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import Drawer from '@/components/ui/Drawer';
 
 export default function StudentsManagementPage() {
   const [students, setStudents] = useState([]);
@@ -612,224 +613,178 @@ export default function StudentsManagementPage() {
       />
 
       {/* Add / Edit Student Drawer (Off-Canvas) */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200">
-          {/* Backdrop Click */}
-          <div className="absolute inset-0" onClick={() => setModalOpen(false)} />
-          
-          <div className="relative bg-slate-900 border-l border-slate-800 w-full max-w-2xl h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-300">
-            {/* Drawer Header */}
-            <div className="p-6 border-b border-slate-800/80 flex items-center justify-between sticky top-0 bg-slate-900/95 backdrop-blur-md z-10">
-              <div className="flex items-center space-x-3">
-                <div className="p-2.5 rounded-2xl bg-teal-500/10 text-teal-400">
-                  <GraduationCap className="w-6 h-6" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-slate-100">
-                    {editingStudent ? 'Edit Student Profile' : 'New Student Admission'}
-                  </h2>
-                  <p className="text-xs text-slate-400">Fill in mandatory details for official school records</p>
-                </div>
+      <Drawer
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={editingStudent ? 'Edit Student Profile' : 'New Student Admission'}
+        subtitle="Fill in mandatory details for official school records"
+        icon={GraduationCap}
+        maxWidth="max-w-2xl"
+        footer={
+          <div className="flex items-center justify-end space-x-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              loading={saving}
+              onClick={handleSubmit}
+            >
+              {editingStudent ? 'Update Student' : 'Save Admission'}
+            </Button>
+          </div>
+        }
+      >
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Photo Upload & Basic Info */}
+          <div className="flex flex-col sm:flex-row gap-6 items-center">
+            <div className="flex flex-col items-center">
+              <div className="w-24 h-24 rounded-2xl bg-slate-800 border-2 border-dashed border-slate-700 flex items-center justify-center overflow-hidden relative group">
+                {photoPreview ? (
+                  <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <GraduationCap className="w-10 h-10 text-slate-500" />
+                )}
+                <label className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs font-semibold text-white cursor-pointer transition-opacity">
+                  Upload Photo
+                  <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+                </label>
               </div>
-              <button
-                onClick={() => setModalOpen(false)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <span className="text-[11px] text-slate-400 mt-2">JPG, PNG (Max 5MB)</span>
             </div>
 
-            {/* Drawer Form */}
-            <form onSubmit={handleSubmit} className="flex-1 flex flex-col overflow-hidden">
-              {/* Scrollable Form Body */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {/* Photo Upload & Basic Info */}
-              <div className="flex flex-col sm:flex-row gap-6 items-center">
-                <div className="flex flex-col items-center">
-                  <div className="w-24 h-24 rounded-full bg-slate-800 border-2 border-dashed border-slate-700 flex items-center justify-center overflow-hidden relative group">
-                    {photoPreview ? (
-                      <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
-                    ) : (
-                      <GraduationCap className="w-10 h-10 text-slate-500" />
-                    )}
-                    <label className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs font-semibold text-white cursor-pointer transition-opacity">
-                      Upload Photo
-                      <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
-                    </label>
-                  </div>
-                  <span className="text-[11px] text-slate-400 mt-2">JPG, PNG (Max 5MB)</span>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 w-full">
+              <Input
+                label="First Name"
+                placeholder="e.g. Rahul"
+                value={formData.first_name}
+                onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                error={formErrors.first_name}
+                required
+              />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 w-full">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">First Name *</label>
-                    <Input
-                      type="text"
-                      placeholder="e.g. Rahul"
-                      value={formData.first_name}
-                      onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                      error={formErrors.first_name}
-                      required
-                    />
-                  </div>
+              <Input
+                label="Last Name"
+                placeholder="e.g. Sharma"
+                value={formData.last_name}
+                onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                error={formErrors.last_name}
+                required
+              />
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Last Name *</label>
-                    <Input
-                      type="text"
-                      placeholder="e.g. Sharma"
-                      value={formData.last_name}
-                      onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                      error={formErrors.last_name}
-                      required
-                    />
-                  </div>
+              <Input
+                label="Admission Number"
+                placeholder="ADM-1001"
+                value={formData.admission_number}
+                onChange={(e) => setFormData({ ...formData, admission_number: e.target.value })}
+              />
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Admission Number</label>
-                    <Input
-                      type="text"
-                      placeholder="ADM-1001"
-                      value={formData.admission_number}
-                      onChange={(e) => setFormData({ ...formData, admission_number: e.target.value })}
-                    />
-                  </div>
-
-                  {/* Target School with Custom Select */}
-                  {formSchoolOptions.length > 0 && (
-                    <Select
-                      label="School"
-                      value={String(formData.school_id)}
-                      onChange={(val) => setFormData({ ...formData, school_id: val })}
-                      options={formSchoolOptions}
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* Class & Academic Info with Custom Selects */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-slate-800/60">
+              {/* Target School with Custom Select */}
+              {formSchoolOptions.length > 0 && (
                 <Select
-                  label="Grade / Class"
-                  value={formData.grade}
-                  onChange={(val) => setFormData({ ...formData, grade: val })}
-                  options={formGradeOptions}
+                  label="School"
+                  value={String(formData.school_id)}
+                  onChange={(val) => setFormData({ ...formData, school_id: val })}
+                  options={formSchoolOptions}
+                  searchable
                 />
-
-                <Select
-                  label="Section"
-                  value={formData.section}
-                  onChange={(val) => setFormData({ ...formData, section: val })}
-                  options={formSectionOptions}
-                />
-
-                <Select
-                  label="Gender"
-                  value={formData.gender}
-                  onChange={(val) => setFormData({ ...formData, gender: val })}
-                  options={formGenderOptions}
-                />
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Date of Birth</label>
-                  <Input
-                    type="date"
-                    value={formData.dob}
-                    onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">NFC Card UID</label>
-                  <Input
-                    type="text"
-                    placeholder="e.g. NFC-883921"
-                    value={formData.nfc_card_uid}
-                    onChange={(e) => setFormData({ ...formData, nfc_card_uid: e.target.value })}
-                    error={formErrors.nfc_card_uid ? formErrors.nfc_card_uid[0] : ''}
-                  />
-                </div>
-
-                <div className="flex items-center pt-5">
-                  <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-300 font-medium">
-                    <input
-                      type="checkbox"
-                      checked={formData.is_bus_service_enabled}
-                      onChange={(e) => setFormData({ ...formData, is_bus_service_enabled: e.target.checked })}
-                      className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-teal-500 focus:ring-teal-500/20"
-                    />
-                    Enable Bus Transport
-                  </label>
-                </div>
-              </div>
-
-              {/* Guardian Contact Details */}
-              <div className="space-y-4 pt-2 border-t border-slate-800/60">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent / Guardian Information</h4>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Guardian Name</label>
-                    <Input
-                      type="text"
-                      placeholder="Father / Mother Name"
-                      value={formData.guardian_name}
-                      onChange={(e) => setFormData({ ...formData, guardian_name: e.target.value })}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Guardian Email</label>
-                    <Input
-                      type="email"
-                      placeholder="parent@example.com"
-                      value={formData.guardian_email}
-                      onChange={(e) => setFormData({ ...formData, guardian_email: e.target.value })}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Guardian Phone</label>
-                    <FormPhoneInput
-                      value={formData.guardian_phone}
-                      onChange={(val) => setFormData({ ...formData, guardian_phone: val })}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Alternate Phone</label>
-                    <FormPhoneInput
-                      value={formData.alternate_phone}
-                      onChange={(val) => setFormData({ ...formData, alternate_phone: val })}
-                    />
-                  </div>
-                </div>
-              </div>
-              </div>
-
-              {/* Form Buttons (Fixed Footer) */}
-              <div className="p-6 border-t border-slate-800/80 bg-slate-900/95 backdrop-blur-md flex items-center justify-end space-x-3 shrink-0">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setModalOpen(false)}
-                  className="rounded-xl px-5"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  disabled={saving}
-                  className="rounded-xl px-6 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700"
-                >
-                  {saving ? 'Saving...' : editingStudent ? 'Update Student' : 'Save Admission'}
-                </Button>
-              </div>
-            </form>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+
+          {/* Class & Academic Info with Custom Selects */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-800/60">
+            <Select
+              label="Grade / Class"
+              value={formData.grade}
+              onChange={(val) => setFormData({ ...formData, grade: val })}
+              options={formGradeOptions}
+            />
+
+            <Select
+              label="Section"
+              value={formData.section}
+              onChange={(val) => setFormData({ ...formData, section: val })}
+              options={formSectionOptions}
+            />
+
+            <Select
+              label="Gender"
+              value={formData.gender}
+              onChange={(val) => setFormData({ ...formData, gender: val })}
+              options={formGenderOptions}
+            />
+
+            <Input
+              label="Date of Birth"
+              type="date"
+              value={formData.dob}
+              onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+            />
+
+            <Input
+              label="NFC Card UID"
+              type="text"
+              placeholder="e.g. NFC-883921"
+              value={formData.nfc_card_uid}
+              onChange={(e) => setFormData({ ...formData, nfc_card_uid: e.target.value })}
+              error={formErrors.nfc_card_uid ? formErrors.nfc_card_uid[0] : ''}
+            />
+
+            <div className="flex items-center pt-6">
+              <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-300 font-medium">
+                <input
+                  type="checkbox"
+                  checked={formData.is_bus_service_enabled}
+                  onChange={(e) => setFormData({ ...formData, is_bus_service_enabled: e.target.checked })}
+                  className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-amber-500/20"
+                />
+                Enable Bus Transport
+              </label>
+            </div>
+          </div>
+
+          {/* Guardian Contact Details */}
+          <div className="space-y-4 pt-4 border-t border-slate-800/60">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent / Guardian Information</h4>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
+                label="Guardian Name"
+                type="text"
+                placeholder="Father / Mother Name"
+                value={formData.guardian_name}
+                onChange={(e) => setFormData({ ...formData, guardian_name: e.target.value })}
+              />
+
+              <Input
+                label="Guardian Email"
+                type="email"
+                placeholder="parent@example.com"
+                value={formData.guardian_email}
+                onChange={(e) => setFormData({ ...formData, guardian_email: e.target.value })}
+              />
+
+              <FormPhoneInput
+                label="Guardian Phone"
+                value={formData.guardian_phone}
+                onChange={(val) => setFormData({ ...formData, guardian_phone: val })}
+              />
+
+              <FormPhoneInput
+                label="Alternate Phone"
+                value={formData.alternate_phone}
+                onChange={(val) => setFormData({ ...formData, alternate_phone: val })}
+              />
+            </div>
+          </div>
+        </form>
+      </Drawer>
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal

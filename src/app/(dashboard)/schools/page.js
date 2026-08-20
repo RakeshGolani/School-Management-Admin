@@ -35,6 +35,7 @@ import { notifySuccess, notifyError } from '@/lib/notify';
 import { handleStatusToggle } from '@/lib/commonHandlers';
 import SchoolTableSkeleton from '@/components/skeletons/SchoolTableSkeleton';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import Drawer from '@/components/ui/Drawer';
 
 export default function SchoolsManagementPage() {
   const [schools, setSchools] = useState([]);
@@ -414,108 +415,84 @@ export default function SchoolsManagementPage() {
       />
 
       {/* Add / Edit School Drawer Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
-          <form 
-            onSubmit={handleSubmit} 
-            className="w-full max-w-lg bg-slate-900 border-l border-slate-800 h-full flex flex-col shadow-2xl relative"
-          >
-            {/* Fixed Header */}
-            <div className="p-6 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/50 shrink-0">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
-                  <School size={18} />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-slate-100 leading-none">
-                    {editingSchool ? 'Edit Institution Profile' : 'Register New School'}
-                  </h3>
-                  <p className="text-[10px] text-slate-400 mt-1.5 leading-none">
-                    {editingSchool ? 'Update school credentials and branding' : 'Setup master portal for a new school'}
-                  </p>
-                </div>
-              </div>
-              <button 
-                type="button"
-                onClick={() => setModalOpen(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 transition cursor-pointer"
-              >
-                <X size={18} />
-              </button>
-            </div>
+      <Drawer
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={editingSchool ? 'Edit Institution Profile' : 'Register New School'}
+        subtitle={editingSchool ? 'Update school credentials and branding' : 'Setup master portal for a new school'}
+        icon={School}
+        maxWidth="max-w-lg"
+        footer={
+          <div className="flex items-center justify-end space-x-3">
+            <Button 
+              type="button"
+              variant="outline"
+              onClick={() => setModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              variant="primary" 
+              type="button" 
+              loading={saving}
+              onClick={handleSubmit}
+            >
+              {editingSchool ? 'Update School' : 'Create School Account'}
+            </Button>
+          </div>
+        }
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            label="School Institution Name"
+            placeholder="Greenwood International School"
+            value={formData.school_name}
+            onChange={(e) => setFormData({ ...formData, school_name: e.target.value })}
+            error={formErrors.school_name}
+            required
+          />
 
-            {/* Scrollable Form Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              <Input
-                label="School Institution Name"
-                placeholder="Greenwood International School"
-                value={formData.school_name}
-                onChange={(e) => setFormData({ ...formData, school_name: e.target.value })}
-                error={formErrors.school_name}
-                required
-              />
+          <Input
+            label="Registration Code"
+            placeholder="SCH-1001"
+            value={formData.code}
+            onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+            error={formErrors.code}
+            required
+          />
 
-              <Input
-                label="Registration Code"
-                placeholder="SCH-1001"
-                value={formData.code}
-                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                error={formErrors.code}
-                required
-              />
+          <Input
+            label="Institutional Email Address"
+            type="email"
+            placeholder="admin@school.com"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            error={formErrors.email}
+            required
+          />
 
-              <Input
-                label="Institutional Email Address"
-                type="email"
-                placeholder="admin@school.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                error={formErrors.email}
-                required
-              />
+          <FormPhoneInput
+            label="Contact Phone Number"
+            value={formData.phone}
+            onChange={(phone) => setFormData({ ...formData, phone })}
+            error={formErrors.phone}
+          />
 
-              <FormPhoneInput
-                label="Contact Phone Number"
-                value={formData.phone}
-                onChange={(phone) => setFormData({ ...formData, phone })}
-                error={formErrors.phone}
-              />
+          <Input
+            label="Campus Address"
+            placeholder="123 Education Lane, Sector 4"
+            value={formData.address}
+            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+            error={formErrors.address}
+          />
 
-              <Input
-                label="Campus Address"
-                placeholder="123 Education Lane, Sector 4"
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                error={formErrors.address}
-              />
-
-              <ColorInput
-                label="Primary Brand Color (Hex)"
-                value={formData.primary_color}
-                onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
-              />
-            </div>
-
-            {/* Fixed Action Footer */}
-            <div className="p-6 border-t border-slate-800/60 bg-slate-900/80 backdrop-blur-md flex items-center justify-end space-x-3 shrink-0">
-              <button 
-                type="button"
-                onClick={() => setModalOpen(false)}
-                className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition duration-150 cursor-pointer"
-              >
-                Cancel
-              </button>
-              <Button 
-                variant="primary" 
-                type="submit" 
-                loading={saving}
-              >
-                {editingSchool ? 'Update School' : 'Create School Account'}
-              </Button>
-            </div>
-          </form>
-        </div>
-      )}
+          <ColorInput
+            label="Primary Brand Color (Hex)"
+            value={formData.primary_color}
+            onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
+          />
+        </form>
+      </Drawer>
 
       {/* Custom Delete Confirmation Modal */}
       <ConfirmModal

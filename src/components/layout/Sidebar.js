@@ -12,7 +12,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
   CreditCard,
-  Receipt
+  Receipt,
+  Radio
 } from 'lucide-react';
 import { adminLogoutAction } from '@/actions/authActions';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -92,7 +93,8 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
     { label: 'Schools Management', href: '/schools', icon: School },
     { label: 'Students Management', href: '/students', icon: GraduationCap },
     { label: 'Transactions & Invoices', href: '/transactions', icon: Receipt },
-    { label: 'Billing Settings', href: '/billing-settings', icon: CreditCard }
+    { label: 'Billing Settings', href: '/billing-settings', icon: CreditCard },
+    { label: 'Socket.IO Live Logs', href: '/sockets', icon: Radio }
   ];
 
   const renderSidebarContent = (isMobile = false) => {

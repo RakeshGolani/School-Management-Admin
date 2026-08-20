@@ -64,7 +64,7 @@ export default function Input({
           onChange={onChange}
           disabled={disabled}
           placeholder={placeholder}
-          className={`w-full bg-slate-800/80 border text-slate-100 placeholder-slate-500 rounded-xl text-sm py-2.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
+          className={`w-full h-[42px] bg-slate-800/80 border text-slate-100 placeholder-slate-500 rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
             Icon ? 'pl-10' : 'pl-3.5'
           } ${
             isPassword && showPasswordToggle ? 'pr-10' : 'pr-3.5'
