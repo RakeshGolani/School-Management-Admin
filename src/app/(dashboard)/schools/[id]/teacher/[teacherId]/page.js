@@ -39,7 +39,7 @@ export default function AdminSchoolTeacherDetailsPage() {
       setLoading(true);
       try {
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
-        const res = await fetch(`${baseUrl}/api/teachers/${teacherId}`, { cache: 'no-store' });
+        const res = await fetch(`${baseUrl}/api/admin/teachers/${teacherId}`, { cache: 'no-store' });
         const resData = await res.json();
         const teacherInfo = resData.data || resData;
 
