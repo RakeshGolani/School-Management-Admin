@@ -102,3 +102,20 @@ export async function getSchoolByIdAction(id) {
   }
 }
 
+export async function updateCustomPricingAction(id, pricingData) {
+  try {
+    const res = await fetch(`${API_URL}/schools/${id}/pricing`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pricingData)
+    });
+    const data = await res.json();
+    if (data.success) {
+      revalidatePath(`/schools/${id}`);
+    }
+    return data;
+  } catch (error) {
+    console.error('Error updating custom pricing:', error);
+    return { success: false, message: 'Failed to connect to server' };
+  }
+}

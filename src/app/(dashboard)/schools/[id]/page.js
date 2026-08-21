@@ -33,6 +33,7 @@ import { notifySuccess, notifyError } from '@/lib/notify';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import SchoolDetailsSkeleton from '@/components/skeletons/SchoolDetailsSkeleton';
 import Tooltip from '@/components/ui/Tooltip';
+import CustomPricingForm from '@/components/schools/CustomPricingForm';
 
 function SchoolAcademicYearsList({ schoolId }) {
   const [years, setYears] = useState([]);
@@ -898,6 +899,9 @@ export default function SchoolDetailsPage() {
               </div>
             )}
           </Card>
+
+          {/* Custom Pricing Form */}
+          <CustomPricingForm schoolId={school.id} subscription={subscription} />
 
           {/* Transaction & Invoices Table */}
           <Card className="border-slate-800/80 bg-slate-900/50 backdrop-blur-md rounded-3xl p-6 space-y-4">

@@ -20,7 +20,8 @@ export default function SuperAdminBillingSettingsPage() {
     bus_fee_monthly: '',
     bus_fee_yearly: '',
     yearly_discount_percent: '',
-    tax_rate_percent: ''
+    tax_rate_percent: '',
+    grace_period_days: ''
   });
 
   useEffect(() => {
@@ -39,7 +40,8 @@ export default function SuperAdminBillingSettingsPage() {
         bus_fee_monthly: res.data.bus_fee_monthly,
         bus_fee_yearly: res.data.bus_fee_yearly,
         yearly_discount_percent: res.data.yearly_discount_percent,
-        tax_rate_percent: res.data.tax_rate_percent
+        tax_rate_percent: res.data.tax_rate_percent,
+        grace_period_days: res.data.grace_period_days !== undefined ? res.data.grace_period_days : 7
       });
     } else {
       setErrorMsg(res.message || 'Failed to fetch global billing settings.');
@@ -245,6 +247,17 @@ export default function SuperAdminBillingSettingsPage() {
               step="0.1"
               icon={Percent}
               value={formData.tax_rate_percent}
+              onChange={handleChange}
+              required
+            />
+
+            <Input
+              label="Grace Period (Days)"
+              name="grace_period_days"
+              type="number"
+              step="1"
+              icon={ShieldAlert}
+              value={formData.grace_period_days}
               onChange={handleChange}
               required
             />
