@@ -14,7 +14,8 @@ import {
   CreditCard,
   Receipt,
   Radio,
-  Settings
+  Settings,
+  Layers
 } from 'lucide-react';
 import { adminLogoutAction } from '@/actions/authActions';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -92,6 +93,7 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
   const navItems = [
     { label: 'Overview', href: '/dashboard', icon: Activity },
     { label: 'Schools Management', href: '/schools', icon: School },
+    { label: 'Packages & Modules', href: '/packages', icon: Layers },
     { label: 'Students Management', href: '/students', icon: GraduationCap },
     { label: 'Transactions & Invoices', href: '/transactions', icon: Receipt },
     { label: 'Billing Settings', href: '/billing-settings', icon: CreditCard },

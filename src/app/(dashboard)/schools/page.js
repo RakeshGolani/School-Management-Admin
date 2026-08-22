@@ -13,7 +13,11 @@ import {
   ShieldCheck, 
   X,
   SlidersHorizontal,
-  Eye
+  Eye,
+  Layers,
+  Bus,
+  BookOpen,
+  CheckCircle2
 } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -31,6 +35,7 @@ import {
   deleteSchoolAction, 
   toggleSchoolStatusAction 
 } from '@/actions/schoolActions';
+import { getPackagesAction } from '@/actions/packageActions';
 import { notifySuccess, notifyError } from '@/lib/notify';
 import { handleStatusToggle } from '@/lib/commonHandlers';
 import SchoolTableSkeleton from '@/components/skeletons/SchoolTableSkeleton';
@@ -39,6 +44,7 @@ import Drawer from '@/components/ui/Drawer';
 
 export default function SchoolsManagementPage() {
   const [schools, setSchools] = useState([]);
+  const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -55,6 +61,7 @@ export default function SchoolsManagementPage() {
     phone: '',
     address: '',
     logo: '',
+    package_id: '',
     primary_color: '#14b8a6'
   });
 
@@ -63,14 +70,22 @@ export default function SchoolsManagementPage() {
   const fetchSchools = async () => {
     setLoading(true);
     try {
-      const res = await getSchoolsAction();
-      if (res.success && Array.isArray(res.data)) {
-        setSchools(res.data);
+      const [schoolsRes, packagesRes] = await Promise.all([
+        getSchoolsAction(),
+        getPackagesAction()
+      ]);
+
+      if (schoolsRes.success && Array.isArray(schoolsRes.data)) {
+        setSchools(schoolsRes.data);
       } else {
         setSchools([]);
       }
+
+      if (packagesRes.success && Array.isArray(packagesRes.data?.packages)) {
+        setPackages(packagesRes.data.packages);
+      }
     } catch (err) {
-      notifyError('Failed to fetch schools list');
+      notifyError('Failed to fetch data');
     } finally {
       setLoading(false);
     }
@@ -82,6 +97,7 @@ export default function SchoolsManagementPage() {
 
   const openAddModal = () => {
     setEditingSchool(null);
+    const defaultPkg = packages.find(p => p.code === 'FULL_SUITE') || packages[0];
     setFormData({
       school_name: '',
       code: `SCH-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -89,6 +105,7 @@ export default function SchoolsManagementPage() {
       phone: '',
       address: '',
       logo: '',
+      package_id: defaultPkg?.id || '',
       primary_color: '#14b8a6'
     });
     setFormErrors({});
@@ -104,6 +121,7 @@ export default function SchoolsManagementPage() {
       phone: school.phone || '',
       address: school.address || '',
       logo: school.logo || '',
+      package_id: school.package_id || school.package?.id || '',
       primary_color: school.primary_color || '#14b8a6'
     });
     setFormErrors({});
@@ -231,6 +249,36 @@ export default function SchoolsManagementPage() {
           {row.phone && <p className="flex items-center"><Phone size={12} className="mr-1 text-slate-400" /> {row.phone}</p>}
         </div>
       )
+    },
+    {
+      header: 'Assigned Package',
+      accessor: 'package',
+      render: (row) => {
+        const pkg = row.package || packages.find(p => p.id === row.package_id) || {
+          name: 'Full Suite',
+          code: 'FULL_SUITE',
+          badge_color: 'indigo',
+          icon: 'Layers'
+        };
+
+        const isTransport = pkg.code === 'TRANSPORT_ONLY';
+        const isSchool = pkg.code === 'SCHOOL_ONLY';
+
+        return (
+          <div className="space-y-1">
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold border ${
+              isTransport 
+                ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' 
+                : isSchool 
+                ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+                : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30'
+            }`}>
+              {isTransport ? <Bus size={12} /> : isSchool ? <BookOpen size={12} /> : <Layers size={12} />}
+              {pkg.name || pkg.code}
+            </span>
+          </div>
+        );
+      }
     },
     {
       header: 'Status',
@@ -485,6 +533,71 @@ export default function SchoolsManagementPage() {
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             error={formErrors.address}
           />
+
+          {/* SaaS Package / Plan Selection Cards */}
+          <div className="space-y-2 pt-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300">
+              Assigned SaaS Package <span className="text-rose-400">*</span>
+            </label>
+            <p className="text-xs text-slate-400">Select what features and modules this school will have access to.</p>
+
+            <div className="grid grid-cols-1 gap-2.5 pt-1">
+              {packages.map((pkg) => {
+                const isSelected = formData.package_id === pkg.id;
+                const isTransport = pkg.code === 'TRANSPORT_ONLY';
+                const isSchool = pkg.code === 'SCHOOL_ONLY';
+
+                return (
+                  <div
+                    key={pkg.id}
+                    onClick={() => setFormData({ ...formData, package_id: pkg.id })}
+                    className={`relative p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer flex items-start gap-3.5 ${
+                      isSelected
+                        ? isTransport
+                          ? 'bg-amber-500/10 border-amber-500/60 ring-2 ring-amber-500/20'
+                          : isSchool
+                          ? 'bg-blue-500/10 border-blue-500/60 ring-2 ring-blue-500/20'
+                          : 'bg-indigo-500/10 border-indigo-500/60 ring-2 ring-indigo-500/20'
+                        : 'bg-slate-800/40 border-slate-700/60 hover:border-slate-600 hover:bg-slate-800/80'
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${
+                      isTransport
+                        ? 'bg-amber-500/20 border-amber-500/40 text-amber-400'
+                        : isSchool
+                        ? 'bg-blue-500/20 border-blue-500/40 text-blue-400'
+                        : 'bg-indigo-500/20 border-indigo-500/40 text-indigo-400'
+                    }`}>
+                      {isTransport ? <Bus size={20} /> : isSchool ? <BookOpen size={20} /> : <Layers size={20} />}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                          {pkg.name}
+                        </h4>
+                        {isSelected && (
+                          <span className="text-amber-400">
+                            <CheckCircle2 size={16} />
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed line-clamp-2">
+                        {pkg.description}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {(pkg.modules || []).map((mod) => (
+                          <span key={mod} className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-slate-900/60 border border-slate-700 text-slate-300">
+                            {mod}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
           <ColorInput
             label="Primary Brand Color (Hex)"
