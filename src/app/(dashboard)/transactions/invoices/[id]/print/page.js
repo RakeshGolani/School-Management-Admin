@@ -18,14 +18,26 @@ export default function StandalonePrintInvoicePage() {
   const id = params?.id;
 
   const [transaction, setTransaction] = useState(null);
+  const [systemSettings, setSystemSettings] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchInvoice = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
-        const response = await fetch(`${apiUrl}/transactions?limit=100`);
+        
+        const [response, sysRes] = await Promise.all([
+          fetch(`${apiUrl}/transactions?limit=100`),
+          fetch(`${apiUrl}/system-settings`)
+        ]);
+        
         const data = await response.json();
+        const sysData = await sysRes.json();
+        
+        if (sysData.success && sysData.data) {
+          setSystemSettings(sysData.data);
+        }
+        
         if (data.success && data.data) {
           const found = data.data.find(
             (t) => String(t.id) === String(id) || String(t.gateway_transaction_id) === String(id)
@@ -124,17 +136,21 @@ export default function StandalonePrintInvoicePage() {
           <div className="flex justify-between items-start pb-6 border-b border-zinc-200 gap-6">
             <div className="space-y-1">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950">
-                  <ShieldCheck size={24} />
-                </div>
+                {systemSettings?.logo_url ? (
+                  <img src={systemSettings.logo_url.startsWith('http') ? systemSettings.logo_url : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${systemSettings.logo_url}`} alt="Logo" className="w-10 h-10 rounded-xl object-cover" />
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950">
+                    <ShieldCheck size={24} />
+                  </div>
+                )}
                 <div>
-                  <h1 className="text-lg font-black text-zinc-900 tracking-tight">EduSchool SaaS Cloud</h1>
-                  <p className="text-xs text-amber-700 font-bold">Enterprise School Management Suiteeeeeeeeeee</p>
+                  <h1 className="text-lg font-black text-zinc-900 tracking-tight">{systemSettings?.company_name || 'EduSchool SaaS Cloud'}</h1>
+                  <p className="text-xs text-amber-700 font-bold">{systemSettings?.tagline || 'Enterprise School Management Suite'}</p>
                 </div>
               </div>
               <p className="text-[11px] text-zinc-600 pt-1.5 leading-relaxed">
-                Tech Park Tower 4, Educational Corridor, Cyber City <br />
-                GSTIN: 27AAAAA0000A1Z5 | Support: support@eduschool.io
+                {systemSettings?.address || 'Tech Park Tower 4, Educational Corridor, Cyber City'} <br />
+                GSTIN: {systemSettings?.gstin || '27AAAAA0000A1Z5'} | Support: {systemSettings?.support_email || 'support@eduschool.io'}
               </p>
             </div>
 
@@ -219,13 +235,14 @@ export default function StandalonePrintInvoicePage() {
                     <div className="font-bold text-zinc-900">
                       SaaS Subscription Plan ({subscription.plan_type ? subscription.plan_type.toUpperCase() : 'MONTHLY'})
                     </div>
-                    <div className="text-[11px] text-zinc-600 mt-0.5">
-                      Access to Student Portal, NFC Attendance, Bus Tracking & Admin Dashboard
+                    <div className="text-[10px] text-zinc-500 mt-0.5">
+                      Access to Student Portal, NFC Attendance{subscription.max_buses_limit > 0 ? ', Bus Tracking' : ''} & Admin Dashboard
                     </div>
                   </td>
                   <td className="py-3 px-3.5 whitespace-nowrap">
                     <span className="px-2 py-0.5 rounded bg-zinc-200 text-zinc-900 font-mono text-[11px] font-medium whitespace-nowrap">
-                      {subscription.max_students_limit || 50} Students / {subscription.max_buses_limit || 5} Buses
+                      {subscription.max_students_limit ?? 50} Students
+                      {subscription.max_buses_limit > 0 ? ` / ${subscription.max_buses_limit} Buses` : ''}
                     </span>
                   </td>
                   <td className="py-3 px-3.5 text-right font-mono">₹{subtotal}</td>

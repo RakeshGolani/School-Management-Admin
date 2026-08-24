@@ -1,9 +1,28 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Printer, Download, Building2, CheckCircle2, AlertCircle, FileText, Calendar, CreditCard, ShieldCheck, Mail, Phone, MapPin } from 'lucide-react';
 
 export default function PrintableInvoiceModal({ isOpen, onClose, transaction }) {
   const [isPrinting, setIsPrinting] = useState(false);
+  const [systemSettings, setSystemSettings] = useState(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      const fetchSettings = async () => {
+        try {
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
+          const res = await fetch(`${apiUrl}/system-settings`);
+          const data = await res.json();
+          if (data.success && data.data) {
+            setSystemSettings(data.data);
+          }
+        } catch (err) {
+          console.error('Error fetching system settings:', err);
+        }
+      };
+      fetchSettings();
+    }
+  }, [isOpen]);
 
   if (!isOpen || !transaction) return null;
 
@@ -73,17 +92,21 @@ export default function PrintableInvoiceModal({ isOpen, onClose, transaction }) 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 border-b border-slate-800 print:border-slate-300 gap-6">
             <div className="space-y-1">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950 shadow-md">
-                  <ShieldCheck size={24} />
-                </div>
+                {systemSettings?.logo_url ? (
+                  <img src={systemSettings.logo_url.startsWith('http') ? systemSettings.logo_url : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${systemSettings.logo_url}`} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-md" />
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950 shadow-md">
+                    <ShieldCheck size={24} />
+                  </div>
+                )}
                 <div>
-                  <h1 className="text-xl font-extrabold tracking-tight text-slate-100 print:text-slate-900">EduSchool SaaS Cloud</h1>
-                  <p className="text-xs text-amber-400 font-semibold print:text-slate-600">Enterprise School Management Suite</p>
+                  <h1 className="text-xl font-extrabold tracking-tight text-slate-100 print:text-slate-900">{systemSettings?.company_name || 'EduSchool SaaS Cloud'}</h1>
+                  <p className="text-xs text-amber-400 font-semibold print:text-slate-600">{systemSettings?.tagline || 'Enterprise School Management Suite'}</p>
                 </div>
               </div>
               <p className="text-xs text-slate-400 print:text-slate-600 pt-2">
-                Tech Park Tower 4, Educational Corridor, Cyber City <br />
-                GSTIN: 27AAAAA0000A1Z5 | Support: support@eduschool.io
+                {systemSettings?.address || 'Tech Park Tower 4, Educational Corridor, Cyber City'} <br />
+                GSTIN: {systemSettings?.gstin || '27AAAAA0000A1Z5'} | Support: {systemSettings?.support_email || 'support@eduschool.io'}
               </p>
             </div>
 
@@ -166,13 +189,14 @@ export default function PrintableInvoiceModal({ isOpen, onClose, transaction }) 
                     <div className="font-bold text-slate-100 print:text-slate-900">
                       SaaS Subscription Plan ({subscription.plan_type ? subscription.plan_type.toUpperCase() : 'MONTHLY'})
                     </div>
-                    <div className="text-[11px] text-slate-400 print:text-slate-600">
-                      Access to Student Portal, NFC Attendance, Bus Tracking & Admin Dashboard
-                    </div>
+                      <div className="text-[10px] text-slate-400 print:text-slate-600 mt-0.5">
+                        Access to Student Portal, NFC Attendance{subscription.max_buses_limit > 0 ? ', Bus Tracking' : ''} & Admin Dashboard
+                      </div>
                   </td>
                   <td className="py-3.5 px-4">
                     <span className="px-2 py-0.5 rounded bg-slate-800 print:bg-slate-200 text-slate-300 print:text-slate-800 font-mono">
-                      {subscription.max_students_limit || 50} Students / {subscription.max_buses_limit || 5} Buses
+                      {subscription.max_students_limit ?? 50} Students
+                      {subscription.max_buses_limit > 0 ? ` / ${subscription.max_buses_limit} Buses` : ''}
                     </span>
                   </td>
                   <td className="py-3.5 px-4 text-right font-mono">₹{subtotal}</td>

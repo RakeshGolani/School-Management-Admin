@@ -28,6 +28,7 @@ export default function InvoiceDetailPage() {
   const id = params?.id;
 
   const [transaction, setTransaction] = useState(null);
+  const [systemSettings, setSystemSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -38,8 +39,18 @@ export default function InvoiceDetailPage() {
     try {
       // Fetch transaction list or single endpoint
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/admin';
-      const response = await fetch(`${apiUrl}/transactions?limit=100`);
+      
+      const [response, sysRes] = await Promise.all([
+        fetch(`${apiUrl}/transactions?limit=100`),
+        fetch(`${apiUrl}/system-settings`)
+      ]);
+      
       const data = await response.json();
+      const sysData = await sysRes.json();
+      
+      if (sysData.success && sysData.data) {
+        setSystemSettings(sysData.data);
+      }
 
       if (data.success && data.data) {
         const found = data.data.find(
@@ -173,17 +184,21 @@ export default function InvoiceDetailPage() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-slate-800 print:border-slate-300 gap-4">
               <div className="space-y-0.5">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950 shadow-md print:bg-amber-500 print:text-slate-950">
-                    <ShieldCheck size={24} />
-                  </div>
+                  {systemSettings?.logo_url ? (
+                    <img src={systemSettings.logo_url.startsWith('http') ? systemSettings.logo_url : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${systemSettings.logo_url}`} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-md print:shadow-none" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950 shadow-md print:bg-amber-500 print:text-slate-950">
+                      <ShieldCheck size={24} />
+                    </div>
+                  )}
                   <div>
-                    <h1 className="text-lg font-extrabold tracking-tight text-slate-100 print:text-slate-900">EduSchool SaaS Cloud</h1>
-                    <p className="text-xs text-amber-400 font-semibold print-amber-text">Enterprise School Management Suiteeeeee</p>
+                    <h1 className="text-lg font-extrabold tracking-tight text-slate-100 print:text-slate-900">{systemSettings?.company_name || 'EduSchool SaaS Cloud'}</h1>
+                    <p className="text-xs text-amber-400 font-semibold print-amber-text">{systemSettings?.tagline || 'Enterprise School Management Suite'}</p>
                   </div>
                 </div>
                 <p className="text-[11px] text-slate-400 print:text-slate-600 pt-1">
-                  Tech Park Tower 4, Educational Corridor, Cyber City <br />
-                  GSTIN: 27AAAAA0000A1Z5 | Support: support@eduschool.io
+                  {systemSettings?.address || 'Tech Park Tower 4, Educational Corridor, Cyber City'} <br />
+                  GSTIN: {systemSettings?.gstin || '27AAAAA0000A1Z5'} | Support: {systemSettings?.support_email || 'support@eduschool.io'}
                 </p>
               </div>
 
@@ -271,12 +286,13 @@ export default function InvoiceDetailPage() {
                         SaaS Subscription Plan ({subscription.plan_type ? subscription.plan_type.toUpperCase() : 'MONTHLY'})
                       </div>
                       <div className="text-[11px] text-slate-400 print:text-slate-600 mt-0.5">
-                        Access to Student Portal, NFC Attendance, Bus Tracking & Admin Dashboard
+                        Access to Student Portal, NFC Attendance{subscription.max_buses_limit > 0 ? ', Bus Tracking' : ''} & Admin Dashboard
                       </div>
                     </td>
                     <td className="py-3 px-3.5 whitespace-nowrap">
                       <span className="px-2 py-0.5 rounded bg-slate-800 print-pill text-slate-300 print:text-slate-900 font-mono text-[11px] whitespace-nowrap">
-                        {subscription.max_students_limit || 50} Students / {subscription.max_buses_limit || 5} Buses
+                        {subscription.max_students_limit ?? 50} Students
+                        {subscription.max_buses_limit > 0 ? ` / ${subscription.max_buses_limit} Buses` : ''}
                       </span>
                     </td>
                     <td className="py-3 px-3.5 text-right font-mono">₹{subtotal}</td>

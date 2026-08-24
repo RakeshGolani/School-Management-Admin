@@ -117,7 +117,10 @@ export default function TransactionDetailModal({ isOpen, onClose, transaction, o
             </div>
             <div className="flex justify-between items-center text-xs text-slate-400">
               <span>Included Max Limits:</span>
-              <span className="text-slate-200 font-mono">{subscription.max_students_limit || 50} Students / {subscription.max_buses_limit || 5} Buses</span>
+              <span className="text-slate-200 font-mono">
+                {subscription.max_students_limit ?? 50} Students
+                {subscription.max_buses_limit > 0 ? ` / ${subscription.max_buses_limit} Buses` : ''}
+              </span>
             </div>
           </div>
 
