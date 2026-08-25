@@ -9,22 +9,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.getItem('theme') === 'light') {
-                  document.documentElement.classList.add('light');
-                } else {
-                  document.documentElement.classList.remove('light');
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
-      </head>
-      <body className="antialiased selection:bg-amber-500 selection:text-slate-950 font-sans">
+      <head />
+      <body className="antialiased selection:bg-amber-500 selection:text-slate-950 font-sans" suppressHydrationWarning>
         {children}
       </body>
     </html>
