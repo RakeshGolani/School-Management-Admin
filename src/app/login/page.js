@@ -54,11 +54,13 @@ export default function AdminLoginPage() {
       <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
           <div className="text-center space-y-2">
-            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-500 shadow-xl">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-700 border border-primary-500/40 flex items-center justify-center mx-auto text-white shadow-xl shadow-primary-600/30 relative">
               <Shield size={32} />
+              <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-secondary-500 border-2 border-slate-900"></span>
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-slate-100">Super Admin Portal</h1>
-            <p className="text-xs text-slate-400">Enter master control credentials to access system</p>
+            <h1 className="text-2xl font-black tracking-tight text-slate-100">Vidyadmin Portal</h1>
+            <p className="text-xs text-secondary-500 font-semibold">Simplifying Education, Empowering Admins</p>
+            <p className="text-[11px] text-slate-400">Enter master control credentials to access the system</p>
           </div>
 
           {errorMsg && (
@@ -99,8 +101,9 @@ export default function AdminLoginPage() {
             </Button>
           </form>
 
-          <div className="text-center pt-2 border-t border-slate-800/80">
-            <p className="text-[11px] text-slate-500">School ERP System • Master Control Panel</p>
+          <div className="text-center pt-2 border-t border-slate-800/80 space-y-1">
+            <p className="text-[11px] text-slate-400 font-medium">Vidyadmin: The Smart Choice for School Administration</p>
+            <p className="text-[10px] text-slate-500">Streamline • Manage • Succeed</p>
           </div>
         </div>
       </div>

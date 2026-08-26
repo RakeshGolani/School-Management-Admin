@@ -3,10 +3,13 @@
 export default function Badge({ children, variant = 'default', className = '' }) {
   const variants = {
     default: 'bg-slate-800 text-slate-300 border-slate-700',
-    success: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    warning: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    primary: 'bg-primary-500/10 text-primary-400 border-primary-500/20',
+    secondary: 'bg-secondary-500/10 text-secondary-400 border-secondary-500/20',
+    accent: 'bg-accent-500/10 text-accent-400 border-accent-500/20',
+    success: 'bg-accent-500/10 text-accent-400 border-accent-500/20',
+    warning: 'bg-secondary-500/10 text-secondary-400 border-secondary-500/20',
     danger: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-    info: 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+    info: 'bg-primary-500/10 text-primary-400 border-primary-500/20'
   };
 
   return (

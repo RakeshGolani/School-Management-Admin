@@ -45,7 +45,7 @@ export default function Input({
     <div className={`space-y-1.5 ${className}`}>
       {label && (
         <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-          {label} {required && <span className="text-amber-500">*</span>}
+          {label} {required && <span className="text-secondary-500">*</span>}
         </label>
       )}
       
@@ -64,14 +64,14 @@ export default function Input({
           onChange={onChange}
           disabled={disabled}
           placeholder={placeholder}
-          className={`w-full h-[42px] bg-slate-800/80 border text-slate-100 placeholder-slate-500 rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
+          className={`w-full h-[42px] bg-slate-800/80 border text-slate-100 placeholder-slate-500 rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 ${
             Icon ? 'pl-10' : 'pl-3.5'
           } ${
             isPassword && showPasswordToggle ? 'pr-10' : 'pr-3.5'
           } ${
             error 
               ? 'border-rose-500 focus:border-rose-500' 
-              : 'border-slate-700 hover:border-slate-600 focus:border-amber-500'
+              : 'border-slate-700 hover:border-slate-600 focus:border-primary-500'
           } ${disabled ? 'opacity-60 cursor-not-allowed bg-slate-900' : ''}`}
           {...props}
         />

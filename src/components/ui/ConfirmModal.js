@@ -72,24 +72,24 @@ export default function ConfirmModal({
       case 'warning':
         return {
           icon: AlertTriangle,
-          iconBg: 'bg-amber-500/10 border-amber-500/20 text-amber-500',
-          buttonVariant: 'primary', // will style specifically or reuse primary
-          borderAccent: 'border-amber-500/20',
+          iconBg: 'bg-secondary-500/10 border-secondary-500/20 text-secondary-400',
+          buttonVariant: 'secondary',
+          borderAccent: 'border-secondary-500/20',
         };
       case 'info':
         return {
           icon: Info,
-          iconBg: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-          buttonVariant: 'secondary',
-          borderAccent: 'border-blue-500/20',
+          iconBg: 'bg-primary-500/10 border-primary-500/20 text-primary-400',
+          buttonVariant: 'primary',
+          borderAccent: 'border-primary-500/20',
         };
       case 'confirm':
       default:
         return {
           icon: HelpCircle,
-          iconBg: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+          iconBg: 'bg-primary-500/10 border-primary-500/20 text-primary-400',
           buttonVariant: 'primary',
-          borderAccent: 'border-emerald-500/20',
+          borderAccent: 'border-primary-500/20',
         };
     }
   };

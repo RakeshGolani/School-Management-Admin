@@ -110,10 +110,10 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
         {!isMobile && onToggleSidebar && (
           <button 
             onClick={onToggleSidebar}
-            className="absolute -right-3.5 top-[30px] z-40 w-7 h-7 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:text-amber-400 hover:bg-slate-700 hover:border-amber-500/50 flex items-center justify-center shadow-lg cursor-pointer transition-all duration-200 active:scale-90"
+            className="absolute -right-3.5 top-[30px] z-40 w-7 h-7 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:text-primary-400 hover:bg-slate-700 hover:border-primary-500/50 flex items-center justify-center shadow-lg cursor-pointer transition-all duration-200 active:scale-90"
             title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
-            {collapsed ? <ChevronsRight size={14} className="text-amber-400" /> : <ChevronsLeft size={14} />}
+            {collapsed ? <ChevronsRight size={14} className="text-primary-400" /> : <ChevronsLeft size={14} />}
           </button>
         )}
 
@@ -122,13 +122,16 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
           collapsed ? 'justify-center px-2' : 'px-6'
         }`}>
           <div className="flex items-center space-x-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 font-bold shrink-0">
-              <Shield size={22} />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 border border-primary-500/40 flex items-center justify-center shadow-lg shadow-primary-600/25 text-white font-bold shrink-0 relative">
+              <Shield size={22} className="text-white" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-secondary-500 border-2 border-slate-900"></span>
             </div>
             {!collapsed && (
               <div className="overflow-hidden transition-all duration-300">
-                <h1 className="text-lg font-black tracking-wider text-slate-100 whitespace-nowrap">SuperAdmin</h1>
-                <span className="text-[10px] text-amber-400 font-semibold uppercase tracking-widest block">Master Control</span>
+                <div className="flex items-center gap-1.5">
+                  <h1 className="text-lg font-black tracking-wider text-slate-100 whitespace-nowrap">Vidyadmin</h1>
+                </div>
+                <span className="text-[10px] text-secondary-500 font-bold uppercase tracking-wider block">SuperAdmin Console</span>
               </div>
             )}
           </div>
@@ -159,12 +162,12 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
                   collapsed ? 'justify-center p-3' : 'justify-between px-3.5 py-3'
                 } ${
                   isActive
-                    ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-md font-semibold'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100 border border-transparent hover:border-amber-500/40'
+                    ? 'bg-primary-600/15 text-primary-400 border border-primary-500/30 shadow-md font-semibold'
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100 border border-transparent hover:border-primary-500/30'
                 }`}
               >
                 <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'}`}>
-                  <Icon size={18} className={`shrink-0 transition-colors ${isActive ? 'text-amber-400' : 'text-slate-500 group-hover:text-slate-300'}`} />
+                  <Icon size={18} className={`shrink-0 transition-colors ${isActive ? 'text-primary-400' : 'text-slate-500 group-hover:text-slate-300'}`} />
                   {!collapsed && <span className="text-sm whitespace-nowrap">{item.label}</span>}
                 </div>
               </Link>

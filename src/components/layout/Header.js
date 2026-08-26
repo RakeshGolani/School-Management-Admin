@@ -30,15 +30,15 @@ export default function Header({ onMobileMenuToggle }) {
         </button>
 
         <div className="flex items-center space-x-3">
-          <div className="flex w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 items-center justify-center text-amber-500 shadow-lg shadow-amber-500/5 transition-all duration-300 hover:scale-105">
+          <div className="flex w-10 h-10 rounded-xl bg-primary-600/15 border border-primary-500/30 items-center justify-center text-primary-400 shadow-lg shadow-primary-600/10 transition-all duration-300 hover:scale-105">
             <Shield size={20} />
           </div>
           <div>
             <h2 className="text-base sm:text-lg font-black text-slate-100 tracking-tight leading-none">
-              Super Admin Portal
+              Vidyadmin SuperAdmin
             </h2>
             <p className="text-[10px] sm:text-xs text-slate-400 font-medium mt-1 leading-none">
-              Master Control & School Management System
+              Simplifying Education, Empowering Admins
             </p>
           </div>
         </div>

@@ -16,9 +16,10 @@ export default function Button({
   const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl text-xs sm:text-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer py-2.5 px-4 sm:px-5 whitespace-nowrap';
 
   const variants = {
-    primary: 'bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-md shadow-amber-500/20',
-    secondary: 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700',
-    outline: 'border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-slate-100',
+    primary: 'bg-primary-600 hover:bg-primary-500 text-white font-bold shadow-md shadow-primary-600/25',
+    secondary: 'bg-secondary-500 hover:bg-secondary-600 text-white font-bold shadow-md shadow-secondary-500/25',
+    accent: 'bg-accent-500 hover:bg-accent-600 text-slate-950 font-bold shadow-md shadow-accent-500/25',
+    outline: 'border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-slate-100 hover:border-primary-500/40',
     ghost: 'bg-transparent hover:bg-slate-800 text-slate-400 hover:text-slate-100',
     danger: 'bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/20'
   };

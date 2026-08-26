@@ -2,15 +2,15 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'SuperAdmin Portal | Master Control Dashboard',
-  description: 'Super Admin Control Panel for School ERP Institutions',
+  title: 'Vidyadmin SuperAdmin | Simplifying Education, Empowering Admins',
+  description: 'Vidyadmin: The Smart Choice for School Administration. Streamline, Manage, Succeed.',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className="antialiased selection:bg-amber-500 selection:text-slate-950 font-sans" suppressHydrationWarning>
+      <body className="antialiased selection:bg-primary-600 selection:text-white font-sans" suppressHydrationWarning>
         {children}
       </body>
     </html>
