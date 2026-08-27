@@ -16,9 +16,11 @@ import {
   Radio,
   Settings,
   Layers,
-  MessageSquareQuote
+  MessageSquareQuote,
+  Users
 } from 'lucide-react';
 import { adminLogoutAction } from '@/actions/authActions';
+import { useSystemSettings } from '@/context/SystemSettingsContext';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 
 // Styled popover label shown on hover when sidebar is collapsed
@@ -80,6 +82,12 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  const { systemSettings } = useSystemSettings();
+  const companyName = systemSettings?.company_name || 'Vidyadmin';
+  const tagline = systemSettings?.tagline || 'Simplifying Education, Empowering Admins';
+  const rawLogo = systemSettings?.logo_url;
+  const logoUrl = rawLogo ? (rawLogo.startsWith('http') || rawLogo.startsWith('data:') ? rawLogo : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${rawLogo.startsWith('/') ? rawLogo : `/${rawLogo}`}`) : null;
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -96,6 +104,7 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
     { label: 'Inquiries & Demo Leads', href: '/inquiries', icon: MessageSquareQuote },
     { label: 'Schools Management', href: '/schools', icon: School },
     { label: 'Packages & Modules', href: '/packages', icon: Layers },
+    { label: 'Teachers & Faculty', href: '/teachers', icon: Users },
     { label: 'Students Management', href: '/students', icon: GraduationCap },
     { label: 'Transactions & Invoices', href: '/transactions', icon: Receipt },
     { label: 'Billing Settings', href: '/billing-settings', icon: CreditCard },
@@ -124,16 +133,28 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
           collapsed ? 'justify-center px-2' : 'px-6'
         }`}>
           <div className="flex items-center space-x-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 border border-primary-500/40 flex items-center justify-center shadow-lg shadow-primary-600/25 text-white font-bold shrink-0 relative">
-              <Shield size={22} className="text-white" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-secondary-500 border-2 border-slate-900"></span>
+            <div className="w-10 h-10 rounded-full bg-transparent flex items-center justify-center shrink-0 relative overflow-hidden">
+              {logoUrl ? (
+                <img 
+                  src={logoUrl} 
+                  alt={companyName} 
+                  className="w-full h-full object-contain rounded-full relative z-10" 
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-primary-600 to-primary-700 border border-primary-500/40 flex items-center justify-center text-white">
+                  <Shield size={20} className="text-white relative z-10" />
+                </div>
+              )}
             </div>
             {!collapsed && (
               <div className="overflow-hidden transition-all duration-300">
                 <div className="flex items-center gap-1.5">
-                  <h1 className="text-lg font-black tracking-wider text-slate-100 whitespace-nowrap">Vidyadmin</h1>
+                  <h1 className="text-base font-black tracking-wider text-slate-100 whitespace-nowrap truncate max-w-[150px]">{companyName}</h1>
                 </div>
-                <span className="text-[10px] text-secondary-500 font-bold uppercase tracking-wider block">SuperAdmin Console</span>
+                <p className="text-[10px] text-slate-400 font-medium truncate max-w-[150px] block" title={tagline}>
+                  {tagline}
+                </p>
               </div>
             )}
           </div>

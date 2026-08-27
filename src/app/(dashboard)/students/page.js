@@ -15,6 +15,7 @@ import {
   X,
   SlidersHorizontal,
   School as SchoolIcon,
+  Building2,
   ChevronLeft,
   ChevronRight,
   ShieldAlert,
@@ -340,18 +341,66 @@ export default function StudentsManagementPage() {
               <span className="text-white font-black relative z-0">{student.first_name ? student.first_name[0].toUpperCase() : 'S'}</span>
             </div>
             <div className="min-w-0">
-              <Link 
-                href={`/students/${student.uuid || student.id}`} 
-                className="font-semibold text-slate-100 hover:text-primary-400 transition-colors block truncate"
-              >
-                {student.first_name} {student.last_name}
-              </Link>
-              <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
-                <span className="font-mono bg-slate-800/80 px-1.5 py-0.5 rounded text-slate-300">
+              <div className="flex items-center gap-2">
+                <Tooltip content={`${student.first_name || ''} ${student.last_name || ''}`.trim()}>
+                  <Link 
+                    href={`/students/${student.uuid || student.id}`} 
+                    className="font-semibold text-slate-100 hover:text-primary-400 transition-colors truncate max-w-[150px]"
+                  >
+                    {student.first_name} {student.last_name}
+                  </Link>
+                </Tooltip>
+                <span className="font-mono text-[10px] text-slate-300 bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700/50 shrink-0">
                   {student.admission_number || `ADM-${student.id}`}
                 </span>
-                <span className="capitalize text-slate-500">• {student.gender || 'male'}</span>
               </div>
+              <p className="text-xs text-slate-400 mt-0.5 capitalize">
+                {student.gender || 'student'}
+              </p>
+            </div>
+          </div>
+        );
+      }
+    },
+    {
+      header: 'School / Institution',
+      accessor: 'school_name',
+      render: (student) => {
+        const schoolObj = student.school || schools.find(s => String(s.id) === String(student.school_id) || String(s.uuid) === String(student.school_id));
+        const schoolName = schoolObj?.school_name || student.school_name || 'N/A';
+        const schoolCode = schoolObj?.code || student.school_code || null;
+        const schoolUuid = schoolObj?.uuid || schoolObj?.id || student.school_id;
+        
+        const rawLogo = schoolObj?.logo_url || schoolObj?.logo;
+        const schoolLogo = rawLogo ? (rawLogo.startsWith('http') || rawLogo.startsWith('data:') ? rawLogo : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${rawLogo.startsWith('/') ? rawLogo : `/${rawLogo}`}`) : null;
+
+        return (
+          <div className="flex items-center space-x-2.5">
+            <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700/80 flex items-center justify-center p-0.5 shrink-0 overflow-hidden relative shadow-inner">
+              {schoolLogo && (
+                <img 
+                  src={schoolLogo} 
+                  alt={schoolName} 
+                  className="w-full h-full object-cover rounded-lg relative z-10" 
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+              )}
+              <span className="text-primary-400 font-black text-xs relative z-0">{schoolName ? schoolName[0].toUpperCase() : 'S'}</span>
+            </div>
+            <div className="min-w-0">
+              <Tooltip content={schoolName}>
+                <Link 
+                  href={`/schools/${schoolUuid}`}
+                  className="text-xs font-bold text-slate-100 hover:text-primary-400 transition-colors block truncate max-w-[170px]"
+                >
+                  {schoolName}
+                </Link>
+              </Tooltip>
+              {schoolCode && (
+                <span className="inline-block font-mono text-[10px] text-slate-400 bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700/50 mt-0.5">
+                  {schoolCode}
+                </span>
+              )}
             </div>
           </div>
         );
@@ -360,18 +409,26 @@ export default function StudentsManagementPage() {
     {
       header: 'Class / Grade',
       accessor: 'grade',
-      render: (student) => (
-        <div className="flex items-center gap-1.5">
-          <Badge variant="primary" className="rounded-lg text-xs font-semibold px-2.5 py-1">
-            {student.grade || 'N/A'}
-          </Badge>
-          {student.section && (
-            <span className="bg-slate-800 text-slate-300 text-xs font-medium px-2 py-0.5 rounded-md border border-slate-700/60">
-              Sec {student.section}
-            </span>
-          )}
-        </div>
-      )
+      render: (student) => {
+        let gradeLabel = student.grade || 'N/A';
+        if (gradeLabel !== 'N/A' && !gradeLabel.toLowerCase().startsWith('grade') && !gradeLabel.toLowerCase().startsWith('class')) {
+          gradeLabel = `Grade ${gradeLabel}`;
+        }
+
+        return (
+          <div className="flex items-center gap-1.5 whitespace-nowrap">
+            <Badge variant="primary" className="rounded-lg text-xs font-semibold px-2.5 py-1 inline-flex items-center gap-1">
+              <GraduationCap className="w-3 h-3 shrink-0" />
+              <span>{gradeLabel}</span>
+            </Badge>
+            {student.section && (
+              <span className="bg-slate-800 text-slate-300 text-xs font-medium px-2 py-0.5 rounded-md border border-slate-700/60 font-mono">
+                Sec {student.section}
+              </span>
+            )}
+          </div>
+        );
+      }
     },
     {
       header: 'Guardian Contact',
@@ -574,34 +631,38 @@ export default function StudentsManagementPage() {
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
-            <Select
-              value={selectedSchoolId}
-              onChange={(val) => setSelectedSchoolId(val)}
-              options={schoolOptions}
-              triggerClassName="min-w-[150px]"
-            />
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full md:w-auto justify-end">
+            <div className="w-full sm:w-48 shrink-0">
+              <Select
+                value={selectedSchoolId}
+                onChange={(val) => setSelectedSchoolId(val)}
+                options={schoolOptions}
+              />
+            </div>
 
-            <Select
-              value={gradeFilter}
-              onChange={(val) => setGradeFilter(val)}
-              options={gradeFilterOptions}
-              triggerClassName="min-w-[130px]"
-            />
+            <div className="w-full sm:w-36 shrink-0">
+              <Select
+                value={gradeFilter}
+                onChange={(val) => setGradeFilter(val)}
+                options={gradeFilterOptions}
+              />
+            </div>
 
-            <Select
-              value={busFilter}
-              onChange={(val) => setBusFilter(val)}
-              options={busFilterOptions}
-              triggerClassName="min-w-[140px]"
-            />
+            <div className="w-full sm:w-36 shrink-0">
+              <Select
+                value={busFilter}
+                onChange={(val) => setBusFilter(val)}
+                options={busFilterOptions}
+              />
+            </div>
 
-            <Select
-              value={statusFilter}
-              onChange={(val) => setStatusFilter(val)}
-              options={statusFilterOptions}
-              triggerClassName="min-w-[130px]"
-            />
+            <div className="w-full sm:w-36 shrink-0">
+              <Select
+                value={statusFilter}
+                onChange={(val) => setStatusFilter(val)}
+                options={statusFilterOptions}
+              />
+            </div>
           </div>
         </div>
       </div>

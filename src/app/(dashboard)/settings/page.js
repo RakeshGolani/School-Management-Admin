@@ -6,6 +6,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import FormPhoneInput from '@/components/FormPhoneInput';
 import { getSystemSettingsAction, updateSystemSettingsAction } from '@/actions/systemSettingsActions';
+import { useSystemSettings } from '@/context/SystemSettingsContext';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SystemSettingsSkeleton from '@/components/skeletons/SystemSettingsSkeleton';
 
@@ -109,6 +110,7 @@ export default function SystemSettingsPage() {
       Notify.success('System settings saved successfully!');
       setLogoFile(null);
       fetchSettings();
+      refreshSettings();
     } else {
       Notify.failure(res.message || 'Failed to save settings.');
     }

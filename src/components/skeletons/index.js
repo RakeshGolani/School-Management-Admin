@@ -1,6 +1,7 @@
 export { default as DashboardSkeleton } from './DashboardSkeleton';
 export { default as SchoolTableSkeleton } from './SchoolTableSkeleton';
 export { default as SchoolDetailsSkeleton } from './SchoolDetailsSkeleton';
+export { default as TeacherTableSkeleton } from './TeacherTableSkeleton';
 export { default as TeacherDetailsSkeleton } from './TeacherDetailsSkeleton';
 export { default as StudentTableSkeleton } from './StudentTableSkeleton';
 export { default as StudentDetailsSkeleton } from './StudentDetailsSkeleton';

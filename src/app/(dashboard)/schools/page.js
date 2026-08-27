@@ -224,21 +224,39 @@ export default function SchoolsManagementPage() {
     {
       header: 'School Institution',
       accessor: 'school_name',
-      render: (row) => (
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
-            {row.logo ? (
-              <img src={row.logo_url || row.logo} alt="Logo" className="w-full h-full object-cover rounded-lg" />
-            ) : (
-              <School size={20} className="text-primary-400" />
-            )}
+      render: (row) => {
+        const schoolUuid = row.uuid || row.id;
+        const rawLogo = row.logo_url || row.logo;
+        const logoSrc = rawLogo ? (rawLogo.startsWith('http') || rawLogo.startsWith('data:') ? rawLogo : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${rawLogo.startsWith('/') ? rawLogo : `/${rawLogo}`}`) : null;
+
+        return (
+          <div className="flex items-center space-x-3 group">
+            <Link 
+              href={`/schools/${schoolUuid}`}
+              className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700/80 group-hover:border-primary-500/50 flex items-center justify-center p-0.5 shrink-0 overflow-hidden relative shadow-inner transition-colors"
+            >
+              {logoSrc ? (
+                <img 
+                  src={logoSrc} 
+                  alt={row.school_name} 
+                  className="w-full h-full object-cover rounded-lg relative z-10" 
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+              ) : null}
+              <span className="text-primary-400 font-black text-sm relative z-0">{row.school_name ? row.school_name[0].toUpperCase() : 'S'}</span>
+            </Link>
+            <div className="min-w-0">
+              <Link 
+                href={`/schools/${schoolUuid}`}
+                className="font-bold text-slate-100 hover:text-primary-400 transition-colors block truncate max-w-xs"
+              >
+                {row.school_name}
+              </Link>
+              <p className="text-xs text-primary-400 font-mono mt-0.5">Code: {row.code}</p>
+            </div>
           </div>
-          <div>
-            <p className="font-bold text-slate-100">{row.school_name}</p>
-            <p className="text-xs text-primary-400 font-mono">Code: {row.code}</p>
-          </div>
-        </div>
-      )
+        );
+      }
     },
     {
       header: 'Contact Details',

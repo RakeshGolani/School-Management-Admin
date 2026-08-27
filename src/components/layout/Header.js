@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react';
 import { Menu, Shield, CheckCircle } from 'lucide-react';
 import { getAdminSessionAction } from '@/actions/authActions';
+import { useSystemSettings } from '@/context/SystemSettingsContext';
 import ProfileDropdown from '@/components/layout/ProfileDropdown';
 import ThemeToggle from '@/components/layout/ThemeToggle';
-
-
 
 export default function Header({ onMobileMenuToggle }) {
   const [adminUser, setAdminUser] = useState(null);
@@ -28,20 +27,6 @@ export default function Header({ onMobileMenuToggle }) {
         >
           <Menu size={20} />
         </button>
-
-        <div className="flex items-center space-x-3">
-          <div className="flex w-10 h-10 rounded-xl bg-primary-600/15 border border-primary-500/30 items-center justify-center text-primary-400 shadow-lg shadow-primary-600/10 transition-all duration-300 hover:scale-105">
-            <Shield size={20} />
-          </div>
-          <div>
-            <h2 className="text-base sm:text-lg font-black text-slate-100 tracking-tight leading-none">
-              Vidyadmin SuperAdmin
-            </h2>
-            <p className="text-[10px] sm:text-xs text-slate-400 font-medium mt-1 leading-none">
-              Simplifying Education, Empowering Admins
-            </p>
-          </div>
-        </div>
       </div>
 
       <div className="flex items-center space-x-4">
@@ -55,7 +40,6 @@ export default function Header({ onMobileMenuToggle }) {
 
         <ThemeToggle />
         <ProfileDropdown adminUser={adminUser} />
-
       </div>
     </header>
   );

@@ -3,6 +3,7 @@ import React from 'react';
 
 /**
  * Enterprise-Grade Professional Dynamic Theme Checkbox Component
+ * Fully compatible with Vidyadmin Dark & Light inverted theme tokens
  */
 export default function Checkbox({
   label,
@@ -43,7 +44,7 @@ export default function Checkbox({
 
   return (
     <div 
-      className={`inline-flex items-center gap-2.5 select-none cursor-pointer group transition-all duration-150 ${
+      className={`inline-flex items-center gap-2.5 select-none cursor-pointer group transition-all duration-150 p-1 -ml-1 rounded-xl hover:bg-slate-800/50 ${
         disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
       } ${className}`}
       onClick={handleClick}
@@ -59,15 +60,11 @@ export default function Checkbox({
           className="sr-only"
         />
         <div 
-          className={`${sizeClasses} border-2 transition-all duration-200 flex items-center justify-center relative shadow-2xs ${
+          className={`${sizeClasses} border-2 transition-all duration-200 flex items-center justify-center relative ${
             checked 
-              ? 'text-white scale-100 shadow-xs' 
-              : 'bg-white border-slate-300 group-hover:border-primary-400 group-hover:scale-105'
+              ? 'bg-primary-600 border-primary-600 text-white scale-100 shadow-sm shadow-primary-500/25' 
+              : 'bg-slate-950 border-slate-700 group-hover:border-primary-500 group-hover:scale-105'
           }`}
-          style={checked ? {
-            backgroundColor: 'var(--theme-primary-500, #0047AB)',
-            borderColor: 'var(--theme-primary-500, #0047AB)'
-          } : {}}
         >
           {checked && (
             <svg 
@@ -92,12 +89,12 @@ export default function Checkbox({
       {(label || description) && (
         <div className="flex flex-col">
           {label && (
-            <span className="text-xs sm:text-sm font-medium text-slate-700 group-hover:text-slate-900 leading-tight transition-colors">
+            <span className="text-xs sm:text-sm font-medium text-slate-200 group-hover:text-primary-400 leading-tight transition-colors duration-150">
               {label}
             </span>
           )}
           {description && (
-            <span className="text-[11px] text-slate-500 mt-0.5 leading-normal">
+            <span className="text-[11px] text-slate-400 mt-0.5 leading-normal transition-colors duration-150">
               {description}
             </span>
           )}
