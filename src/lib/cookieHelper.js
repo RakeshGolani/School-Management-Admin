@@ -1,4 +1,4 @@
-import { encrypt, decrypt } from './cryptoHelper';
+import { encrypt, decrypt, encryptCookieKey } from './cryptoHelper';
 import { cookies } from 'next/headers';
 
 /**
@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
  */
 export async function setEncryptedCookie(key, value, options = {}) {
   const cookieStore = await cookies();
-  const encryptedKey = encrypt(key);
+  const encryptedKey = encryptCookieKey(key);
   const encryptedValue = encrypt(typeof value === 'object' ? JSON.stringify(value) : String(value));
 
   cookieStore.set(encryptedKey, encryptedValue, {
@@ -21,38 +21,35 @@ export async function setEncryptedCookie(key, value, options = {}) {
 
 export async function getEncryptedCookie(key) {
   const cookieStore = await cookies();
-  const allCookies = cookieStore.getAll();
+  const encryptedKey = encryptCookieKey(key);
+  const cookieItem = cookieStore.get(encryptedKey);
   
-  for (const c of allCookies) {
+  if (cookieItem && cookieItem.value) {
+    const decryptedValue = decrypt(cookieItem.value);
     try {
-      const decryptedKey = decrypt(c.name);
-      if (decryptedKey === key) {
-        const decryptedValue = decrypt(c.value);
-        try {
-          return JSON.parse(decryptedValue);
-        } catch {
-          return decryptedValue;
-        }
-      }
+      return JSON.parse(decryptedValue);
     } catch {
-      // Ignore unencrypted or invalid key cookies
+      return decryptedValue;
     }
   }
+
+  // Fallback check for legacy unencrypted key
+  const legacyItem = cookieStore.get(key);
+  if (legacyItem && legacyItem.value) {
+    const decryptedValue = decrypt(legacyItem.value);
+    try {
+      return JSON.parse(decryptedValue);
+    } catch {
+      return decryptedValue || legacyItem.value;
+    }
+  }
+
   return null;
 }
 
 export async function deleteEncryptedCookie(key) {
   const cookieStore = await cookies();
-  const allCookies = cookieStore.getAll();
-
-  for (const c of allCookies) {
-    try {
-      const decryptedKey = decrypt(c.name);
-      if (decryptedKey === key) {
-        cookieStore.delete(c.name);
-      }
-    } catch {
-      // Ignore
-    }
-  }
+  const encryptedKey = encryptCookieKey(key);
+  cookieStore.delete(encryptedKey);
+  cookieStore.delete(key);
 }

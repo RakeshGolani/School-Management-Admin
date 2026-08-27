@@ -25,9 +25,9 @@ const FormPhoneInput = ({ label, value, onChange, error, required, defaultCountr
             )}
             <PhoneInput
                 defaultCountry={defaultCountry}
-                preferredCountries={['in', 'us', 'gb', 'ae']}
                 value={formattedValue}
                 forceDialCode
+                disableCountryGuess
                 charAfterDialCode=" "
                 prefix="+"
                 onChange={(phone) => {
@@ -49,23 +49,33 @@ const FormPhoneInput = ({ label, value, onChange, error, required, defaultCountr
                     transition: 'all 0.2s ease'
                 }}
                 countrySelectorStyleProps={{
+                    buttonProps: {
+                        disabled: true,
+                        tabIndex: -1,
+                        style: {
+                            pointerEvents: 'none',
+                            cursor: 'default'
+                        }
+                    },
                     buttonStyle: {
                         height: '42px', // Match standard Input height
                         borderRadius: '12px 0 0 12px',
                         border: error ? '1px solid #f43f5e' : '1px solid var(--slate-700)',
                         borderRight: 'none',
                         backgroundColor: 'var(--slate-800)',
-                        padding: '0 10px',
+                        padding: '0 12px',
+                        pointerEvents: 'none',
+                        cursor: 'default',
                         transition: 'all 0.2s ease'
+                    },
+                    dropdownArrowStyleProps: {
+                        style: {
+                            display: 'none'
+                        }
                     },
                     dropdownStyleProps: {
                         style: {
-                            backgroundColor: 'var(--slate-900)',
-                            color: 'var(--slate-100)',
-                            border: '1px solid var(--slate-800)',
-                            borderRadius: '12px',
-                            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25)',
-                            scrollbarWidth: 'thin'
+                            display: 'none'
                         }
                     }
                 }}

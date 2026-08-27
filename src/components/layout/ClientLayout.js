@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { encryptCookieKey } from '@/lib/cryptoHelper';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 
@@ -16,7 +17,8 @@ export default function ClientLayout({ initialCollapsed = false, children }) {
     setIsCollapsed((prev) => {
       const nextState = !prev;
       localStorage.setItem('sidebar_collapsed', String(nextState));
-      document.cookie = `sidebar_collapsed=${nextState}; path=/; max-age=31536000; SameSite=Lax`;
+      const encKey = encryptCookieKey('sidebar_collapsed');
+      document.cookie = `${encKey}=${nextState}; path=/; max-age=31536000; SameSite=Lax`;
       return nextState;
     });
   };
