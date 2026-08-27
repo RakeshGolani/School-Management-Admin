@@ -258,7 +258,7 @@ export default function AdminSchoolStudentDetailsPage() {
       {/* Main Student Banner */}
       <Card className="p-6 md:p-8 border-slate-800/80 bg-slate-900/50 backdrop-blur-md rounded-3xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-          <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-amber-500/20 to-indigo-500/20 border-2 border-slate-700 flex items-center justify-center text-3xl font-black text-amber-400 overflow-hidden shrink-0">
+          <div className="w-28 h-28 md:w-32 md:h-32 rounded-3xl bg-gradient-to-br from-primary-600 to-indigo-600 border-2 border-primary-500/30 flex items-center justify-center text-3xl font-black text-white shadow-xl shadow-primary-500/20 overflow-hidden shrink-0">
             {photoUrl ? (
               <img src={photoUrl} alt={`${student.first_name} ${student.last_name}`} className="w-full h-full object-cover" />
             ) : (
@@ -272,7 +272,7 @@ export default function AdminSchoolStudentDetailsPage() {
                 <h1 className="text-2xl md:text-3xl font-black text-slate-100">
                   {student.first_name} {student.last_name}
                 </h1>
-                <p className="text-xs font-mono font-bold text-amber-400 mt-1">
+                <p className="text-xs font-mono font-bold text-primary-400 mt-1">
                   Roll No: {student.roll_no || student.roll_number || `#${student.id}`}
                 </p>
               </div>
@@ -336,7 +336,7 @@ export default function AdminSchoolStudentDetailsPage() {
 
             <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800/60">
               <span className="text-slate-400 font-medium">Guardian Email</span>
-              <span className="font-bold text-teal-400">{student.guardian_email || student.parent?.email || 'N/A'}</span>
+              <span className="font-bold text-primary-400">{student.guardian_email || student.parent?.email || 'N/A'}</span>
             </div>
           </div>
         </Card>

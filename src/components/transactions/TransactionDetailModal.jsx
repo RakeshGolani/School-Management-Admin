@@ -49,12 +49,12 @@ export default function TransactionDetailModal({ isOpen, onClose, transaction, o
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-800 bg-slate-900/50">
           <div className="flex items-center space-x-3">
-            <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <div className="p-2.5 rounded-xl bg-primary-500/10 text-primary-400 border border-primary-500/20">
               <CreditCard size={22} />
             </div>
             <div>
               <h3 className="text-lg font-bold text-slate-100">Transaction Details</h3>
-              <p className="text-xs text-slate-400">Ref: <span className="font-mono text-amber-400">{transaction.gateway_transaction_id}</span></p>
+              <p className="text-xs text-slate-400">Ref: <span className="font-mono text-primary-400">{transaction.gateway_transaction_id}</span></p>
             </div>
           </div>
           <button
@@ -132,7 +132,7 @@ export default function TransactionDetailModal({ isOpen, onClose, transaction, o
                 <p className="text-sm font-bold text-amber-400 font-mono">{invoice.invoice_number}</p>
               </div>
               <Link
-                href={`/transactions/invoices/${transaction.id}`}
+                href={`/transactions/invoices/${transaction.uuid || transaction.id}`}
                 onClick={onClose}
                 className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center space-x-1.5 transition border border-slate-700"
               >

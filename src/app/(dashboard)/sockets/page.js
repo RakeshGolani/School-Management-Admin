@@ -24,6 +24,7 @@ import Button from '@/components/ui/Button';
 import Tooltip from '@/components/ui/Tooltip';
 import DataTable from '@/components/ui/DataTable';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import SocketLogsSkeleton from '@/components/skeletons/SocketLogsSkeleton';
 import { 
   getSocketMetricsAction, 
   getSocketLogsAction, 
@@ -111,6 +112,10 @@ export default function SocketsPage() {
     }, 3500);
     return () => clearInterval(interval);
   }, [autoRefresh, fetchData]);
+
+  if (loading && logs.length === 0) {
+    return <SocketLogsSkeleton />;
+  }
 
   // Handle Force Disconnect
   const handleConfirmDisconnect = async () => {
@@ -400,14 +405,15 @@ export default function SocketsPage() {
     <div className="space-y-6">
       
       {/* 🌟 Top Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
-            <Radio className="w-6 h-6" />
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/25 shrink-0">
+            <Radio className="w-7 h-7" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <h1 className="text-2xl font-black text-slate-100 tracking-wide">Socket.IO Real-Time Gateway &amp; Logs</h1>
+              <h1 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">Socket.IO Real-Time Gateway &amp; Logs</h1>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Port 5000 Live
               </span>
@@ -415,14 +421,14 @@ export default function SocketsPage() {
                 Uptime: {formatUptime(metrics.uptimeSeconds)}
               </span>
             </div>
-            <p className="text-xs text-slate-400">Live WebSocket telemetry tracking, client connections stream, room subscriptions, and admin broadcast console.</p>
+            <p className="text-xs sm:text-sm text-slate-400">Live WebSocket telemetry tracking, client connections stream, room subscriptions, and admin broadcast console.</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap relative z-10 shrink-0">
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`px-3 py-2 rounded-xl text-xs font-bold border flex items-center gap-1.5 transition cursor-pointer ${
+            className={`px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-1.5 transition cursor-pointer ${
               autoRefresh 
                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
                 : 'bg-slate-800 border-slate-700 text-slate-400'
@@ -435,7 +441,7 @@ export default function SocketsPage() {
           <Tooltip content="Refresh socket telemetry" position="left">
             <button
               onClick={fetchData}
-              className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-amber-500/10 border border-slate-700 hover:border-amber-500/30 text-slate-200 hover:text-amber-400 text-xs font-semibold transition cursor-pointer active:scale-95"
+              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold transition cursor-pointer active:scale-95"
             >
               <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
               <span>Refresh</span>
@@ -445,7 +451,7 @@ export default function SocketsPage() {
           <Tooltip content="Wipe socket log history" position="left">
             <button
               onClick={() => setClearLogsModalOpen(true)}
-              className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-semibold transition cursor-pointer active:scale-95"
+              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-semibold transition cursor-pointer active:scale-95"
             >
               <Trash2 size={14} />
               <span>Clear Logs</span>
@@ -471,13 +477,13 @@ export default function SocketsPage() {
         </div>
 
         {/* Total Connections */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex justify-between items-center group hover:border-amber-500/30 transition">
+        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex justify-between items-center group hover:border-primary-500/30 transition">
           <div className="space-y-1">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Connects</p>
-            <h3 className="text-2xl font-black text-amber-400 font-mono">{metrics.totalConnections}</h3>
+            <h3 className="text-2xl font-black text-slate-100 font-mono">{metrics.totalConnections}</h3>
             <p className="text-[11px] text-slate-400 font-medium">Cumulative Handshakes</p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 shadow-inner">
+          <div className="w-12 h-12 rounded-2xl bg-primary-500/10 border border-primary-500/20 text-primary-400 flex items-center justify-center shrink-0 shadow-inner">
             <Users size={24} />
           </div>
         </div>
@@ -513,7 +519,7 @@ export default function SocketsPage() {
           onClick={() => setActiveTab('logs')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer shrink-0 ${
             activeTab === 'logs'
-              ? 'bg-amber-500 text-slate-900 shadow-lg shadow-amber-500/20'
+              ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25'
               : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
           }`}
         >
@@ -525,7 +531,7 @@ export default function SocketsPage() {
           onClick={() => setActiveTab('clients')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer shrink-0 ${
             activeTab === 'clients'
-              ? 'bg-amber-500 text-slate-900 shadow-lg shadow-amber-500/20'
+              ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25'
               : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
           }`}
         >
@@ -537,7 +543,7 @@ export default function SocketsPage() {
           onClick={() => setActiveTab('broadcast')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer shrink-0 ${
             activeTab === 'broadcast'
-              ? 'bg-amber-500 text-slate-900 shadow-lg shadow-amber-500/20'
+              ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25'
               : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
           }`}
         >
@@ -551,7 +557,7 @@ export default function SocketsPage() {
         <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center space-x-2">
-              <Terminal className="text-amber-400" size={18} />
+              <Terminal className="text-primary-400" size={18} />
               <h3 className="font-bold text-slate-100 text-sm">Socket.IO Activity Event Stream</h3>
               <span className="text-xs text-slate-500">({logs.length} logged)</span>
             </div>
@@ -622,7 +628,7 @@ export default function SocketsPage() {
           <div className="lg:col-span-7">
             <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
               <div className="flex items-center space-x-2 border-b border-slate-800 pb-4">
-                <Send className="text-amber-400" size={18} />
+                <Send className="text-primary-400" size={18} />
                 <h3 className="font-bold text-slate-100 text-sm">Dispatch Live Socket Announcement</h3>
               </div>
 
@@ -642,7 +648,7 @@ export default function SocketsPage() {
                     value={broadcastMessage}
                     onChange={(e) => setBroadcastMessage(e.target.value)}
                     placeholder="e.g. Urgent Notice: Bus Route #12 is delayed by 15 minutes due to heavy traffic."
-                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/30 transition resize-none"
+                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/30 transition resize-none"
                   />
                 </div>
 
@@ -675,7 +681,7 @@ export default function SocketsPage() {
                   <button
                     type="submit"
                     disabled={broadcasting || !broadcastMessage.trim()}
-                    className="flex items-center space-x-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-slate-900 text-xs font-bold transition cursor-pointer shadow-lg active:scale-95"
+                    className="flex items-center space-x-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 disabled:opacity-50 text-white text-xs font-bold transition cursor-pointer shadow-lg shadow-primary-500/25 active:scale-95"
                   >
                     <Send size={14} />
                     <span>{broadcasting ? 'Emitting...' : 'Dispatch Live Broadcast'}</span>
@@ -688,22 +694,22 @@ export default function SocketsPage() {
           <div className="lg:col-span-5 space-y-4">
             <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4">
               <div className="flex items-center space-x-2 border-b border-slate-800 pb-3">
-                <Globe className="text-purple-400" size={18} />
+                <Globe className="text-primary-400" size={18} />
                 <h3 className="font-bold text-slate-100 text-sm">How Broadcasts Work</h3>
               </div>
 
               <div className="space-y-3 text-xs text-slate-300 leading-relaxed">
                 <p>
-                  When you submit a broadcast message, the backend Socket.IO engine emits a <code className="text-amber-400 bg-slate-950 px-1.5 py-0.5 rounded font-mono font-bold border border-slate-800">systemBroadcast</code> event.
+                  When you submit a broadcast message, the backend Socket.IO engine emits a <code className="text-primary-400 bg-slate-950 px-1.5 py-0.5 rounded font-mono font-bold border border-slate-800">systemBroadcast</code> event.
                 </p>
                 <div className="p-4 bg-slate-950/60 rounded-xl border border-slate-800 space-y-2">
                   <p className="font-bold text-slate-100 flex items-center gap-1.5">
-                    <Info size={14} className="text-amber-400" /> Targeting Capabilities:
+                    <Info size={14} className="text-primary-400" /> Targeting Capabilities:
                   </p>
                   <ul className="list-disc list-inside space-y-1.5 text-[11px] text-slate-400">
                     <li><strong className="text-slate-200">Global (All Sockets):</strong> Delivered instantly to every connected School, Parent &amp; Driver dashboard.</li>
-                    <li><strong className="text-slate-200">Specific Route:</strong> Enter <code className="text-amber-400 font-bold">route_12</code> to alert only parents and students of Bus 12.</li>
-                    <li><strong className="text-slate-200">Specific School:</strong> Enter <code className="text-purple-400 font-bold">school_1</code> to target one campus.</li>
+                    <li><strong className="text-slate-200">Specific Route:</strong> Enter <code className="text-primary-400 font-bold">route_12</code> to alert only parents and students of Bus 12.</li>
+                    <li><strong className="text-slate-200">Specific School:</strong> Enter <code className="text-primary-400 font-bold">school_1</code> to target one campus.</li>
                   </ul>
                 </div>
               </div>

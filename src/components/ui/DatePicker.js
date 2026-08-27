@@ -243,12 +243,12 @@ export default function DatePicker({
           id={inputId}
           disabled={disabled}
           onClick={() => !disabled && setIsOpen(!isOpen)}
-          className={`w-full flex items-center justify-between bg-slate-800/80 border text-slate-100 rounded-xl text-sm py-2.5 px-4 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
+          className={`w-full flex items-center justify-between bg-slate-800/80 border text-slate-100 rounded-xl text-sm py-2.5 px-4 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 ${
             displayValue ? 'font-medium text-slate-100' : 'text-slate-500'
           } ${
             error 
               ? 'border-rose-500 focus:border-rose-500' 
-              : 'border-slate-700 hover:border-slate-600 focus:border-amber-500'
+              : 'border-slate-700 hover:border-slate-600 focus:border-primary-500'
           } ${disabled ? 'opacity-60 cursor-not-allowed bg-slate-900' : 'cursor-pointer'}`}
           {...props}
         >
@@ -309,7 +309,7 @@ export default function DatePicker({
                         }}
                         className={`w-full text-left px-3 py-1.5 text-xs transition-colors hover:bg-slate-700 ${
                           idx === month 
-                            ? 'text-amber-400 font-bold bg-slate-700/50' 
+                            ? 'text-primary-400 font-bold bg-slate-700/50' 
                             : 'text-slate-200'
                         } cursor-pointer`}
                       >
@@ -353,7 +353,7 @@ export default function DatePicker({
                         }}
                         className={`w-full text-left px-3 py-1.5 text-xs transition-colors hover:bg-slate-700 ${
                           y === year 
-                            ? 'text-amber-400 font-bold bg-slate-700/50' 
+                            ? 'text-primary-400 font-bold bg-slate-700/50' 
                             : 'text-slate-200'
                         } cursor-pointer`}
                       >
@@ -389,9 +389,9 @@ export default function DatePicker({
 
               let btnClasses = "h-8 w-8 flex items-center justify-center text-xs rounded-full transition-all focus:outline-none cursor-pointer ";
               if (selected) {
-                btnClasses += "bg-amber-500 text-slate-950 font-bold hover:bg-amber-600 shadow-sm shadow-amber-500/20";
+                btnClasses += "bg-primary-600 text-white font-bold hover:bg-primary-700 shadow-md shadow-primary-600/30";
               } else if (today) {
-                btnClasses += "border border-amber-500 text-amber-400 font-bold hover:bg-amber-500/10";
+                btnClasses += "border border-primary-500 text-primary-400 font-bold hover:bg-primary-500/10";
               } else if (!cell.isCurrentMonth) {
                 btnClasses += "text-slate-600 hover:bg-slate-700/50";
               } else {
@@ -416,7 +416,7 @@ export default function DatePicker({
             <button
               type="button"
               onClick={handleToday}
-              className="font-bold text-amber-400 hover:text-amber-300 transition hover:underline cursor-pointer"
+              className="font-bold text-primary-400 hover:text-primary-300 transition hover:underline cursor-pointer"
             >
               Today
             </button>

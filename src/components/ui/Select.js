@@ -86,8 +86,8 @@ export default function Select({
             error 
               ? 'border-rose-500 focus:border-rose-500' 
               : isOpen
-                ? 'border-amber-500 ring-2 ring-amber-500/20'
-                : 'border-slate-700 hover:border-slate-600 focus:border-amber-500'
+                ? 'border-primary-500 ring-2 ring-primary-500/20'
+                : 'border-slate-700 hover:border-slate-600 focus:border-primary-500'
           } ${disabled ? 'opacity-60 cursor-not-allowed bg-slate-900' : ''} ${triggerClassName}`}
         >
           <span className={`truncate ${selectedOption ? 'text-slate-100' : 'text-slate-500'}`}>
@@ -96,7 +96,7 @@ export default function Select({
           <ChevronDown 
             size={16} 
             className={`text-slate-400 transition-transform duration-200 shrink-0 ml-2 ${
-              isOpen ? 'transform rotate-180 text-amber-400' : ''
+              isOpen ? 'transform rotate-180 text-primary-400' : ''
             }`} 
           />
         </button>
@@ -116,7 +116,7 @@ export default function Select({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl py-1.5 pl-8 pr-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl py-1.5 pl-8 pr-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
             )}
@@ -133,7 +133,7 @@ export default function Select({
                       onClick={() => handleSelect(opt.value)}
                       className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-left text-xs font-semibold transition duration-100 cursor-pointer ${
                         isSelected
-                          ? 'bg-amber-500 text-slate-950 font-bold'
+                          ? 'bg-primary-600 text-white font-bold shadow-md shadow-primary-600/25'
                           : 'text-slate-300 hover:bg-slate-800 hover:text-slate-100'
                       }`}
                     >

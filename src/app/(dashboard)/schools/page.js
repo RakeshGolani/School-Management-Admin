@@ -226,16 +226,16 @@ export default function SchoolsManagementPage() {
       accessor: 'school_name',
       render: (row) => (
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-white border border-slate-700 flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
+          <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
             {row.logo ? (
               <img src={row.logo_url || row.logo} alt="Logo" className="w-full h-full object-cover rounded-lg" />
             ) : (
-              <School size={20} className="text-amber-500" />
+              <School size={20} className="text-primary-400" />
             )}
           </div>
           <div>
             <p className="font-bold text-slate-100">{row.school_name}</p>
-            <p className="text-xs text-amber-400 font-mono">Code: {row.code}</p>
+            <p className="text-xs text-primary-400 font-mono">Code: {row.code}</p>
           </div>
         </div>
       )
@@ -305,8 +305,8 @@ export default function SchoolsManagementPage() {
         <div className="flex items-center justify-end space-x-2 pr-2">
           <Tooltip content="View Details">
             <Link
-              href={`/schools/${row.id}`}
-              className="inline-flex items-center justify-center p-1.5 rounded-lg bg-slate-800 hover:bg-teal-500/20 text-teal-400 transition cursor-pointer"
+              href={`/schools/${row.uuid || row.id}`}
+              className="inline-flex items-center justify-center p-1.5 rounded-lg bg-slate-800 hover:bg-primary-500/20 text-primary-400 transition cursor-pointer"
             >
               <Eye size={15} />
             </Link>
@@ -315,7 +315,7 @@ export default function SchoolsManagementPage() {
             <button
               type="button"
               onClick={() => openEditModal(row)}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 transition cursor-pointer"
+              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer"
             >
               <Edit3 size={15} />
             </button>
@@ -337,18 +337,19 @@ export default function SchoolsManagementPage() {
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/20">
-            <School className="w-6 h-6" />
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/25 shrink-0">
+            <School className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-100 tracking-tight">Registered Institutions</h1>
-            <p className="text-xs text-slate-400 mt-1">Super Admin institution portal & access control</p>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">Registered Institutions</h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Super Admin institution portal & access control</p>
           </div>
         </div>
         <Tooltip content="Register a new school in the portal" position="left">
-          <Button variant="primary" icon={Plus} onClick={openAddModal} className="shrink-0">
+          <Button variant="primary" icon={Plus} onClick={openAddModal} className="shrink-0 relative z-10">
             Register New School
           </Button>
         </Tooltip>
@@ -357,34 +358,34 @@ export default function SchoolsManagementPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Total Institutions Card */}
-        <div className="glass-panel rounded-2xl border border-slate-800/80 bg-slate-900/20 p-5 shadow-xl flex items-center justify-between group hover:border-amber-500/30 transition-all duration-300">
+        <div className="glass-panel rounded-2xl border border-slate-800/80 bg-slate-900/40 p-5 shadow-xl flex items-center justify-between group hover:border-primary-500/30 transition-all duration-300">
           <div className="space-y-1.5">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Institutions</p>
-            <h3 className="text-3xl font-black text-slate-100 group-hover:text-amber-400 transition-colors">{schools.length}</h3>
+            <h3 className="text-3xl font-black text-slate-100 group-hover:text-primary-400 transition-colors">{schools.length}</h3>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shadow-lg shadow-amber-500/5 group-hover:scale-110 transition-transform duration-300">
+          <div className="w-12 h-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 shadow-lg shadow-primary-500/10 group-hover:scale-110 transition-transform duration-300">
             <School size={22} />
           </div>
         </div>
 
         {/* Active Institutions Card */}
-        <div className="glass-panel rounded-2xl border border-slate-800/80 bg-slate-900/20 p-5 shadow-xl flex items-center justify-between group hover:border-emerald-500/30 transition-all duration-300">
+        <div className="glass-panel rounded-2xl border border-slate-800/80 bg-slate-900/40 p-5 shadow-xl flex items-center justify-between group hover:border-emerald-500/30 transition-all duration-300">
           <div className="space-y-1.5">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Campus</p>
             <h3 className="text-3xl font-black text-slate-100 group-hover:text-emerald-400 transition-colors">{schools.filter(s => s.status === 'active').length}</h3>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shadow-lg shadow-emerald-500/5 group-hover:scale-110 transition-transform duration-300">
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-500/10 group-hover:scale-110 transition-transform duration-300">
             <ShieldCheck size={22} />
           </div>
         </div>
 
         {/* Inactive Institutions Card */}
-        <div className="glass-panel rounded-2xl border border-slate-800/80 bg-slate-900/20 p-5 shadow-xl flex items-center justify-between group hover:border-rose-500/30 transition-all duration-300">
+        <div className="glass-panel rounded-2xl border border-slate-800/80 bg-slate-900/40 p-5 shadow-xl flex items-center justify-between group hover:border-rose-500/30 transition-all duration-300">
           <div className="space-y-1.5">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Inactive / Pending</p>
             <h3 className="text-3xl font-black text-slate-100 group-hover:text-rose-400 transition-colors">{schools.filter(s => s.status === 'inactive').length}</h3>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 shadow-lg shadow-rose-500/5 group-hover:scale-110 transition-transform duration-300">
+          <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 shadow-lg shadow-rose-500/10 group-hover:scale-110 transition-transform duration-300">
             <X size={22} />
           </div>
         </div>
@@ -403,7 +404,7 @@ export default function SchoolsManagementPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search school by name, code, or email..."
-              className="w-full bg-slate-800/50 border border-slate-700/80 hover:border-slate-600/80 focus:border-amber-500/80 text-slate-100 placeholder-slate-400/80 rounded-xl text-sm py-2 pl-10 pr-10 focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all duration-200"
+              className="w-full bg-slate-800/50 border border-slate-700/80 hover:border-slate-600/80 focus:border-primary-500 text-slate-100 placeholder-slate-400/80 rounded-xl text-sm py-2 pl-10 pr-10 focus:outline-none focus:ring-1 focus:ring-primary-500/20 transition-all duration-200"
             />
             {searchQuery && (
               <button
@@ -431,7 +432,7 @@ export default function SchoolsManagementPage() {
 
             {/* Dynamic Results Counter */}
             <div className="px-3.5 py-2 rounded-xl bg-slate-800/30 border border-slate-800/80 text-[11px] font-semibold text-slate-400 select-none flex items-center gap-1.5 shrink-0">
-              <SlidersHorizontal size={12} className="text-amber-500/80" />
+              <SlidersHorizontal size={12} className="text-primary-400" />
               <span>{filteredSchools.length} {filteredSchools.length === 1 ? 'Institution' : 'Institutions'}</span>
             </div>
 

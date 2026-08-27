@@ -23,6 +23,7 @@ import Drawer from '@/components/ui/Drawer';
 import { getPackagesAction, updatePackageAction } from '@/actions/packageActions';
 import { SYSTEM_MODULES } from '@/config/modules';
 import { notifySuccess, notifyError } from '@/lib/notify';
+import PackageSkeleton from '@/components/skeletons/PackageSkeleton';
 
 export default function PackagesManagementPage() {
   const [packages, setPackages] = useState([]);
@@ -59,6 +60,10 @@ export default function PackagesManagementPage() {
   useEffect(() => {
     fetchPackages();
   }, []);
+
+  if (loading) {
+    return <PackageSkeleton />;
+  }
 
   const totalRecords = packages.length;
   const totalPages = Math.ceil(totalRecords / pageSize) || 1;
@@ -204,14 +209,15 @@ export default function PackagesManagementPage() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/20">
-            <Layers className="w-6 h-6" />
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/25 shrink-0">
+            <Layers className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-100 tracking-tight">SaaS Packages & Modules</h1>
-            <p className="text-xs text-slate-400 mt-1">Configure predefined packages and module feature toggles for schools</p>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">SaaS Packages & Modules</h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Configure predefined packages and module feature toggles for schools</p>
           </div>
         </div>
       </div>

@@ -4,8 +4,10 @@ import { Settings, Building, Save, Image as ImageIcon } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import FormPhoneInput from '@/components/FormPhoneInput';
 import { getSystemSettingsAction, updateSystemSettingsAction } from '@/actions/systemSettingsActions';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SystemSettingsSkeleton from '@/components/skeletons/SystemSettingsSkeleton';
 
 export default function SystemSettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -40,7 +42,15 @@ export default function SystemSettingsPage() {
         gstin: res.data.gstin || ''
       });
       if (res.data.logo_url) {
-        setCurrentLogo(process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace('/api/admin', '') + res.data.logo_url : `http://127.0.0.1:5000${res.data.logo_url}`);
+        const logo = res.data.logo_url;
+        if (logo.startsWith('http://') || logo.startsWith('https://') || logo.startsWith('data:image')) {
+          setCurrentLogo(logo);
+        } else {
+          const base = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
+          setCurrentLogo(`${base}${logo.startsWith('/') ? logo : `/${logo}`}`);
+        }
+      } else {
+        setCurrentLogo(null);
       }
     } else {
       Notify.failure(res.message || 'Failed to fetch system settings.');
@@ -97,6 +107,8 @@ export default function SystemSettingsPage() {
     const res = await updateSystemSettingsAction(submitData);
     if (res.success) {
       Notify.success('System settings saved successfully!');
+      setLogoFile(null);
+      fetchSettings();
     } else {
       Notify.failure(res.message || 'Failed to save settings.');
     }
@@ -104,25 +116,21 @@ export default function SystemSettingsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-400 space-y-2 animate-pulse">
-        <Settings className="animate-spin-slow" size={32} />
-        <p className="text-xs font-semibold uppercase tracking-wider">Loading System Settings...</p>
-      </div>
-    );
+    return <SystemSettingsSkeleton />;
   }
 
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <Settings className="w-6 h-6" />
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/25 shrink-0">
+            <Settings className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-100">System Settings</h1>
-            <p className="text-xs text-slate-400 mt-1">Manage your SaaS provider details, branding, and billing profile.</p>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">System Settings</h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Manage your SaaS provider details, branding, and billing profile.</p>
           </div>
         </div>
       </div>
@@ -130,7 +138,7 @@ export default function SystemSettingsPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card className="bg-slate-900/80 border border-slate-800/80 p-6 space-y-5">
           <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400">
               <Building size={20} />
             </div>
             <div>
@@ -145,7 +153,12 @@ export default function SystemSettingsPage() {
                 {logoFile ? (
                   <img src={URL.createObjectURL(logoFile)} alt="Logo Preview" className="w-full h-full object-contain" />
                 ) : currentLogo ? (
-                  <img src={currentLogo} alt="Current Logo" className="w-full h-full object-contain" />
+                  <img 
+                    src={currentLogo} 
+                    alt="Current Logo" 
+                    className="w-full h-full object-contain" 
+                    onError={() => setCurrentLogo(null)} 
+                  />
                 ) : (
                   <ImageIcon size={28} className="text-slate-600" />
                 )}
@@ -157,7 +170,7 @@ export default function SystemSettingsPage() {
                   type="file" 
                   accept="image/png, image/jpeg, image/webp" 
                   onChange={handleFileChange}
-                  className="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500/10 file:text-amber-400 hover:file:bg-amber-500/20 cursor-pointer file:cursor-pointer hover:text-slate-300 transition-colors" 
+                  className="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary-500/10 file:text-primary-400 hover:file:bg-primary-500/20 cursor-pointer file:cursor-pointer hover:text-slate-300 transition-colors" 
                 />
                 <p className="text-[10px] text-slate-500 font-semibold">Recommended: 200x200px PNG or JPG (Max 10MB).</p>
                 {fileError && <p className="text-xs text-rose-500 font-semibold mt-1">{fileError}</p>}
@@ -193,13 +206,11 @@ export default function SystemSettingsPage() {
               required
             />
 
-            <Input
+            <FormPhoneInput
               label="Support Phone"
-              name="support_phone"
-              type="text"
               value={formData.support_phone}
-              onChange={handleChange}
-              placeholder="e.g. +91 9876543210"
+              onChange={(phone) => setFormData(prev => ({ ...prev, support_phone: phone }))}
+              defaultCountry="in"
             />
 
             <div className="md:col-span-2">

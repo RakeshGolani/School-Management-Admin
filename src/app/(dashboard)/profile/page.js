@@ -166,14 +166,15 @@ export default function AdminProfilePage() {
   return (
     <div className="space-y-6">
       {/* Title Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <User className="w-6 h-6" />
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/25 shrink-0">
+            <User className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-100">Super Admin Profile</h1>
-            <p className="text-xs text-slate-400 mt-1">Manage your account details, phone configuration, and secure password credentials.</p>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">Super Admin Profile</h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Manage your account details, phone configuration, and secure password credentials.</p>
           </div>
         </div>
       </div>
@@ -185,7 +186,7 @@ export default function AdminProfilePage() {
           <Card className="bg-slate-900/80">
             <div className="flex flex-col items-center justify-center text-center space-y-6">
               {/* Round Avatar initials */}
-              <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 border-2 border-amber-500/20 shadow-lg shadow-amber-500/10 flex items-center justify-center text-slate-950 text-3xl font-black select-none leading-none">
+              <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-primary-600 to-indigo-600 border-2 border-primary-500/30 shadow-xl shadow-primary-500/20 flex items-center justify-center text-white text-3xl font-black select-none leading-none">
                 {getInitials(adminUser?.name)}
               </div>
 
@@ -196,7 +197,7 @@ export default function AdminProfilePage() {
 
               {/* Badges/Tags */}
               <div className="flex flex-wrap gap-2 justify-center pt-2">
-                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 border border-amber-500/20 text-amber-400">
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary-500/10 border border-primary-500/20 text-primary-400">
                   <Shield size={10} />
                   <span>Super Admin</span>
                 </span>
@@ -223,11 +224,11 @@ export default function AdminProfilePage() {
           {/* Security Credentials Trigger Card */}
           <Card 
             onClick={() => setChangePasswordOpen(true)}
-            className="bg-slate-900/80 hover:border-amber-500/40 transition cursor-pointer select-none"
+            className="bg-slate-900/80 hover:border-primary-500/40 transition cursor-pointer select-none"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3.5">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 shrink-0">
                   <Lock size={18} />
                 </div>
                 <div className="text-left">

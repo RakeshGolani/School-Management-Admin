@@ -328,7 +328,7 @@ export default function StudentsManagementPage() {
 
         return (
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-slate-700 to-slate-800 flex items-center justify-center font-bold text-teal-400 text-sm border border-slate-700 shrink-0 overflow-hidden relative">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center font-black text-white text-sm border border-primary-500/30 shadow-md shadow-primary-500/20 shrink-0 overflow-hidden relative">
               {photoUrl && (
                 <img 
                   src={photoUrl} 
@@ -337,12 +337,12 @@ export default function StudentsManagementPage() {
                   onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
               )}
-              <span className="text-teal-400 font-bold">{student.first_name ? student.first_name[0].toUpperCase() : 'S'}</span>
+              <span className="text-white font-black relative z-0">{student.first_name ? student.first_name[0].toUpperCase() : 'S'}</span>
             </div>
             <div className="min-w-0">
               <Link 
-                href={`/students/${student.id}`} 
-                className="font-semibold text-slate-100 hover:text-teal-400 transition-colors block truncate"
+                href={`/students/${student.uuid || student.id}`} 
+                className="font-semibold text-slate-100 hover:text-primary-400 transition-colors block truncate"
               >
                 {student.first_name} {student.last_name}
               </Link>
@@ -362,7 +362,7 @@ export default function StudentsManagementPage() {
       accessor: 'grade',
       render: (student) => (
         <div className="flex items-center gap-1.5">
-          <Badge variant="teal" className="rounded-lg text-xs font-semibold px-2.5 py-1">
+          <Badge variant="primary" className="rounded-lg text-xs font-semibold px-2.5 py-1">
             {student.grade || 'N/A'}
           </Badge>
           {student.section && (
@@ -384,7 +384,7 @@ export default function StudentsManagementPage() {
           {student.guardian_phone && (
             <a 
               href={`tel:${student.guardian_phone}`} 
-              className="inline-flex items-center gap-1 text-xs text-teal-400 hover:underline"
+              className="inline-flex items-center gap-1 text-xs text-primary-400 hover:underline font-medium"
             >
               <Phone className="w-3 h-3" />
               {student.guardian_phone}
@@ -448,8 +448,8 @@ export default function StudentsManagementPage() {
         <div className="flex items-center justify-end space-x-2 pr-2">
           <Tooltip content="View Profile">
             <Link
-              href={`/students/${student.id}`}
-              className="inline-flex items-center justify-center p-1.5 rounded-lg bg-slate-800 hover:bg-teal-500/20 text-teal-400 transition cursor-pointer"
+              href={`/students/${student.uuid || student.id}`}
+              className="inline-flex items-center justify-center p-1.5 rounded-lg bg-slate-800 hover:bg-primary-500/20 text-primary-400 transition cursor-pointer"
             >
               <Eye size={15} />
             </Link>
@@ -485,14 +485,15 @@ export default function StudentsManagementPage() {
   return (
     <div className="space-y-6 pb-12">
       {/* Header & Title */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <GraduationCap className="w-6 h-6" />
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/25 shrink-0">
+            <GraduationCap className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-100 tracking-tight">Students Directory</h1>
-            <p className="text-xs text-slate-400 mt-1">Manage student admissions, profiles, NFC cards & transport access</p>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">Students Directory</h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Manage student admissions, profiles, NFC cards & transport access</p>
           </div>
         </div>
 
@@ -501,6 +502,7 @@ export default function StudentsManagementPage() {
             onClick={openAddModal} 
             icon={UserPlus}
             variant="primary" 
+            className="shrink-0 relative z-10"
           >
             New Admission
           </Button>
@@ -515,7 +517,7 @@ export default function StudentsManagementPage() {
               <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Enrolled</p>
               <h3 className="text-2xl font-bold text-slate-100 mt-1">{totalCount}</h3>
             </div>
-            <div className="p-3 bg-teal-500/10 rounded-xl text-teal-400">
+            <div className="p-3 bg-primary-500/10 border border-primary-500/20 rounded-xl text-primary-400">
               <GraduationCap className="w-6 h-6" />
             </div>
           </div>
@@ -527,7 +529,7 @@ export default function StudentsManagementPage() {
               <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Students</p>
               <h3 className="text-2xl font-bold text-emerald-400 mt-1">{activeCount}</h3>
             </div>
-            <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400">
+            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
               <UserCheck className="w-6 h-6" />
             </div>
           </div>
@@ -539,7 +541,7 @@ export default function StudentsManagementPage() {
               <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Bus Passengers</p>
               <h3 className="text-2xl font-bold text-amber-400 mt-1">{busCount}</h3>
             </div>
-            <div className="p-3 bg-amber-500/10 rounded-xl text-amber-400">
+            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-400">
               <Bus className="w-6 h-6" />
             </div>
           </div>
@@ -549,9 +551,9 @@ export default function StudentsManagementPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">NFC Enabled</p>
-              <h3 className="text-2xl font-bold text-indigo-400 mt-1">{students.filter(s => s.nfc_card_uid).length}</h3>
+              <h3 className="text-2xl font-bold text-primary-400 mt-1">{students.filter(s => s.nfc_card_uid).length}</h3>
             </div>
-            <div className="p-3 bg-indigo-500/10 rounded-xl text-indigo-400">
+            <div className="p-3 bg-primary-500/10 border border-primary-500/20 rounded-xl text-primary-400">
               <CreditCard className="w-6 h-6" />
             </div>
           </div>
@@ -568,7 +570,7 @@ export default function StudentsManagementPage() {
               placeholder="Search name, admission #, NFC..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-950/60 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
+              className="w-full bg-slate-950/60 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-primary-500 transition-colors"
             />
           </div>
 

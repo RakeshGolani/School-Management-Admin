@@ -58,7 +58,7 @@ export default function ProfileDropdown({ adminUser }) {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center space-x-3 pl-3 border-l border-slate-800 hover:bg-slate-800/30 p-1.5 rounded-xl transition duration-200 cursor-pointer select-none text-left focus:outline-none"
       >
-        <div className="w-9 h-9 rounded-xl bg-amber-500 flex items-center justify-center font-bold text-slate-950 text-xs shadow-md shadow-amber-500/10 shrink-0">
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-primary-600/20 shrink-0">
           {getInitials(adminUser?.name)}
         </div>
         <div className="hidden lg:block">
@@ -72,7 +72,7 @@ export default function ProfileDropdown({ adminUser }) {
         <ChevronDown 
           size={16} 
           className={`text-slate-400 transition-transform duration-200 shrink-0 hidden sm:block ${
-            isOpen ? 'rotate-180 text-amber-500' : ''
+            isOpen ? 'rotate-180 text-primary-400' : ''
           }`} 
         />
       </button>
@@ -83,7 +83,7 @@ export default function ProfileDropdown({ adminUser }) {
           {/* User Info Header */}
           <div className="px-4 py-3 border-b border-slate-800/60 bg-slate-900/50">
             <div className="flex items-center space-x-2.5">
-              <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-bold text-slate-950 text-sm shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center font-bold text-white text-sm shadow-md shadow-primary-600/25">
                 {getInitials(adminUser?.name)}
               </div>
               <div>
@@ -96,7 +96,7 @@ export default function ProfileDropdown({ adminUser }) {
               </div>
             </div>
             {/* Role Badge */}
-            <div className="mt-2.5 flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-lg w-fit text-[10px] font-bold uppercase tracking-wider text-amber-400">
+            <div className="mt-2.5 flex items-center gap-1.5 bg-primary-500/10 border border-primary-500/20 px-2 py-1 rounded-lg w-fit text-[10px] font-bold uppercase tracking-wider text-primary-400">
               <Shield size={10} />
               <span>{adminUser?.role === 'super_admin' ? 'Super Admin' : 'Administrator'}</span>
             </div>

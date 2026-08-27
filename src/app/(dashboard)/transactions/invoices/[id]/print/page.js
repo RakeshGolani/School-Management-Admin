@@ -10,7 +10,8 @@ import {
   Mail, 
   Phone, 
   MapPin, 
-  RefreshCw
+  RefreshCw,
+  Printer
 } from 'lucide-react';
 
 export default function StandalonePrintInvoicePage() {
@@ -122,8 +123,9 @@ export default function StandalonePrintInvoicePage() {
         </button>
         <button
           onClick={() => window.print()}
-          className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow cursor-pointer active:scale-95 transition"
+          className="px-5 py-2 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-primary-500/25 cursor-pointer active:scale-95 transition flex items-center gap-1.5"
         >
+          <Printer size={15} />
           Print Document
         </button>
       </div>
@@ -139,13 +141,13 @@ export default function StandalonePrintInvoicePage() {
                 {systemSettings?.logo_url ? (
                   <img src={systemSettings.logo_url.startsWith('http') ? systemSettings.logo_url : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${systemSettings.logo_url}`} alt="Logo" className="w-10 h-10 rounded-xl object-cover" />
                 ) : (
-                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center font-black text-white shadow-md shadow-primary-500/20">
                     <ShieldCheck size={24} />
                   </div>
                 )}
                 <div>
-                  <h1 className="text-lg font-black text-zinc-900 tracking-tight">{systemSettings?.company_name || 'EduSchool SaaS Cloud'}</h1>
-                  <p className="text-xs text-amber-700 font-bold">{systemSettings?.tagline || 'Enterprise School Management Suite'}</p>
+                  <h1 className="text-lg font-black text-zinc-900 tracking-tight">{systemSettings?.company_name || 'Vidyadmin SaaS Cloud'}</h1>
+                  <p className="text-xs text-primary-600 font-bold">{systemSettings?.tagline || 'Simplifying Education, Empowering Admins'}</p>
                 </div>
               </div>
               <p className="text-[11px] text-zinc-600 pt-1.5 leading-relaxed">

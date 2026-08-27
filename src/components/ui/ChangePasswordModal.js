@@ -154,7 +154,7 @@ export default function ChangePasswordModal({ isOpen, onClose, adminId }) {
 
         {/* Modal Header */}
         <div className="flex items-start space-x-3.5">
-          <div className="p-3 rounded-2xl border bg-amber-500/10 border-amber-500/20 text-amber-500 shrink-0">
+          <div className="p-3 rounded-2xl border bg-primary-500/10 border-primary-500/20 text-primary-400 shrink-0">
             <KeyRound size={22} />
           </div>
           <div className="space-y-1 pt-0.5">

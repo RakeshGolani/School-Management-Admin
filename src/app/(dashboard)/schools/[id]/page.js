@@ -365,7 +365,7 @@ export default function SchoolDetailsPage() {
         </Card>
 
         <Card className="border-slate-800/80 bg-slate-900/50 backdrop-blur-md rounded-2xl p-4 flex items-center gap-4 hover:border-slate-700/80 transition">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 shrink-0">
             <BookOpen size={22} />
           </div>
           <div>
@@ -398,15 +398,15 @@ export default function SchoolDetailsPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl font-bold text-xs transition-all whitespace-nowrap cursor-pointer ${
                 isActive 
-                  ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-md' 
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/60 border border-transparent'
+                  ? 'bg-primary-500/15 text-primary-400 border border-primary-500/30 shadow-md shadow-primary-500/10' 
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
               }`}
             >
               <Icon size={16} />
               <span>{tab.label}</span>
               {tab.count !== null && (
                 <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-                  isActive ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-800 text-slate-400'
+                  isActive ? 'bg-primary-400/20 text-primary-300' : 'bg-slate-800 text-slate-400'
                 }`}>
                   {tab.count}
                 </span>
@@ -452,11 +452,11 @@ export default function SchoolDetailsPage() {
                         href={school.website.startsWith('http') ? school.website : `https://${school.website}`} 
                         target="_blank" 
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-teal-400 hover:underline font-semibold"
+                        className="inline-flex items-center gap-1.5 text-primary-400 hover:underline font-semibold"
                       >
                         <Globe size={13} />
                         {school.website}
-                        <ExternalLink size={11} className="text-teal-500" />
+                        <ExternalLink size={11} className="text-primary-400" />
                       </a>
                     </span>
                   </div>
@@ -477,7 +477,7 @@ export default function SchoolDetailsPage() {
 
             <Card className="border-slate-800/80 bg-slate-900/50 backdrop-blur-md rounded-3xl p-6 space-y-4">
               <div className="flex items-center gap-2.5 border-b border-slate-800/60 pb-3">
-                <Phone size={18} className="text-teal-400" />
+                <Phone size={18} className="text-primary-400" />
                 <h3 className="text-sm font-extrabold text-slate-200 uppercase tracking-wider">Contact & Address</h3>
               </div>
 
@@ -487,7 +487,7 @@ export default function SchoolDetailsPage() {
                   <span className="col-span-2">
                     <a 
                       href={`mailto:${school.email}`} 
-                      className="inline-flex items-center gap-1.5 text-teal-400 hover:underline font-semibold"
+                      className="inline-flex items-center gap-1.5 text-primary-400 hover:underline font-semibold"
                     >
                       <Mail size={13} />
                       {school.email}
@@ -501,7 +501,7 @@ export default function SchoolDetailsPage() {
                     <span className="col-span-2">
                       <a 
                         href={`tel:${school.phone}`} 
-                        className="inline-flex items-center gap-1.5 text-teal-400 hover:underline font-semibold"
+                        className="inline-flex items-center gap-1.5 text-primary-400 hover:underline font-semibold"
                       >
                         <Phone size={13} />
                         {school.phone}
@@ -588,7 +588,7 @@ export default function SchoolDetailsPage() {
               {
                 header: 'Email',
                 accessor: 'email',
-                cell: (t) => <span className="text-teal-400 font-semibold">{t.email}</span>
+                cell: (t) => <span className="text-primary-400 font-semibold">{t.email}</span>
               },
               {
                 header: 'Phone',
@@ -631,7 +631,7 @@ export default function SchoolDetailsPage() {
                 cell: (t) => (
                   <Tooltip content="View Teacher Profile" position="top">
                     <Link
-                      href={`/schools/${id}/teacher/${t.id}`}
+                      href={`/schools/${id}/teacher/${t.uuid || t.id}`}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 font-extrabold text-xs border border-blue-500/20 transition cursor-pointer"
                     >
                       <Eye size={13} />
@@ -718,7 +718,7 @@ export default function SchoolDetailsPage() {
                 cell: (s) => (
                   <Tooltip content="View Student Profile" position="top">
                     <Link
-                      href={`/schools/${id}/student/${s.id}`}
+                      href={`/schools/${id}/student/${s.uuid || s.id}`}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-extrabold text-xs border border-emerald-500/20 transition cursor-pointer"
                     >
                       <Eye size={13} />
@@ -777,16 +777,16 @@ export default function SchoolDetailsPage() {
                 return (
                   <div 
                     key={c.id} 
-                    className="bg-gradient-to-b from-slate-900/90 to-slate-950/90 rounded-2xl border border-slate-800/90 hover:border-amber-500/40 p-5 space-y-4 shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+                    className="bg-gradient-to-b from-slate-900/90 to-slate-950/90 rounded-2xl border border-slate-800/90 hover:border-primary-500/40 p-5 space-y-4 shadow-xl transition-all duration-300 hover:-translate-y-1 group"
                   >
                     {/* Header: Class Name + Section Badge */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-black text-sm group-hover:scale-110 transition-transform">
+                        <div className="w-10 h-10 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 font-black text-sm group-hover:scale-110 transition-transform">
                           {c.class_name ? c.class_name.charAt(0) : 'C'}
                         </div>
                         <div>
-                          <h4 className="font-extrabold text-slate-100 text-base group-hover:text-amber-400 transition-colors">
+                          <h4 className="font-extrabold text-slate-100 text-base group-hover:text-primary-400 transition-colors">
                             {c.class_name}
                           </h4>
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">

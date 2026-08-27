@@ -121,9 +121,9 @@ export default function DataTable({
                           <span className="text-slate-500 transition-colors">
                             {isSorted ? (
                               sortConfig.direction === 'asc' ? (
-                                <ArrowUp size={13} className="text-amber-500" />
+                                <ArrowUp size={13} className="text-primary-500" />
                               ) : (
-                                <ArrowDown size={13} className="text-amber-500" />
+                                <ArrowDown size={13} className="text-primary-500" />
                               )
                             ) : (
                               <ArrowUpDown size={13} className="opacity-40 group-hover:opacity-100" />
@@ -258,7 +258,7 @@ export default function DataTable({
                     onClick={() => setCurrentPage(pageNum)}
                     className={`min-w-8 h-8 rounded-xl text-xs font-bold border transition duration-150 cursor-pointer ${
                       currentPage === pageNum
-                        ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-md shadow-amber-500/10'
+                        ? 'bg-primary-600 text-white border-primary-500 shadow-md shadow-primary-600/25'
                         : 'border-slate-800 bg-slate-900/30 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                     }`}
                   >

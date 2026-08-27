@@ -21,6 +21,7 @@ import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import { notifyError } from '@/lib/notify';
+import TeacherDetailsSkeleton from '@/components/skeletons/TeacherDetailsSkeleton';
 
 export default function AdminTeacherDetailsPage() {
   const router = useRouter();
@@ -59,12 +60,7 @@ export default function AdminTeacherDetailsPage() {
   }, [teacherId]);
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[450px] space-y-4">
-        <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-sm font-semibold text-slate-400 animate-pulse">Loading teacher profile data...</p>
-      </div>
-    );
+    return <TeacherDetailsSkeleton />;
   }
 
   if (!teacher) {
@@ -109,7 +105,7 @@ export default function AdminTeacherDetailsPage() {
 
       {/* Hero Banner Card */}
       <Card className="p-6 md:p-8 border border-slate-800 shadow-sm rounded-3xl bg-slate-900/90 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-amber-500/10 via-blue-500/5 to-transparent rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary-500/10 via-indigo-500/5 to-transparent rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
 
         <div className="relative flex flex-col lg:flex-row items-center lg:items-start gap-8">
           <div className="relative group">
@@ -175,14 +171,14 @@ export default function AdminTeacherDetailsPage() {
         </div>
       </Card>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+      {/* Navigation Tabs */}
+      <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
         <button
           onClick={() => setActiveTab('overview')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-extrabold text-sm transition cursor-pointer ${
             activeTab === 'overview'
-              ? 'bg-amber-500 text-slate-950 shadow-md'
-              : 'text-slate-400 hover:bg-slate-800/60'
+              ? 'bg-primary-600 text-white shadow-md shadow-primary-600/25'
+              : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
           }`}
         >
           <User className="w-4 h-4" />
@@ -193,14 +189,14 @@ export default function AdminTeacherDetailsPage() {
           onClick={() => setActiveTab('history')}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-extrabold text-sm transition cursor-pointer ${
             activeTab === 'history'
-              ? 'bg-amber-500 text-slate-950 shadow-md'
-              : 'text-slate-400 hover:bg-slate-800/60'
+              ? 'bg-primary-600 text-white shadow-md shadow-primary-600/25'
+              : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
           }`}
         >
           <History className="w-4 h-4" />
           <span>Academic Session History</span>
           {assignmentHistory.length > 0 && (
-            <span className="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-slate-950 text-amber-400 font-bold">
+            <span className="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-slate-950 text-primary-400 font-bold">
               {assignmentHistory.length}
             </span>
           )}

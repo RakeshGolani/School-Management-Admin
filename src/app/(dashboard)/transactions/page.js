@@ -21,6 +21,7 @@ import DataTable from '@/components/ui/DataTable';
 import Drawer from '@/components/ui/Drawer';
 import Link from 'next/link';
 import { notifySuccess, notifyError } from '@/lib/notify';
+import TransactionSkeleton from '@/components/skeletons/TransactionSkeleton';
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
@@ -97,6 +98,10 @@ export default function TransactionsPage() {
   useEffect(() => {
     fetchTransactions();
   }, [statusFilter]);
+
+  if (loading && transactions.length === 0) {
+    return <TransactionSkeleton />;
+  }
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -175,7 +180,7 @@ export default function TransactionsPage() {
       header: 'Transaction Ref',
       accessor: 'gateway_transaction_id',
       render: (row) => (
-        <span className="font-mono font-semibold text-amber-400">
+        <span className="font-mono font-semibold text-primary-400">
           {row.gateway_transaction_id}
         </span>
       )
@@ -244,7 +249,7 @@ export default function TransactionsPage() {
         <div className="flex items-center justify-end space-x-2">
           <Tooltip content="View Invoice" position="top">
             <Link
-              href={`/transactions/invoices/${row.id}`}
+              href={`/transactions/invoices/${row.uuid || row.id}`}
               className="inline-flex items-center justify-center p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-slate-100 transition cursor-pointer shrink-0"
             >
               <Eye size={15} />
@@ -259,22 +264,23 @@ export default function TransactionsPage() {
     <div className="space-y-8 p-6 max-w-7xl mx-auto">
       
       {/* Page Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <Receipt className="w-6 h-6" />
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/25 shrink-0">
+            <Receipt className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-100 tracking-wide">Transactions & Invoices</h1>
-            <p className="text-xs text-slate-400 mt-1">Manage SaaS platform revenue, subscription payments & tax invoices</p>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">Transactions & Invoices</h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Manage SaaS platform revenue, subscription payments & tax invoices</p>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2.5 relative z-10 shrink-0">
           <Tooltip content="Record manual offline payment" position="left">
             <button
               onClick={() => setIsOfflineModalOpen(true)}
-              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold transition cursor-pointer shadow-lg active:scale-95"
+              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold transition cursor-pointer shadow-lg shadow-primary-600/25 active:scale-95"
             >
               <Plus size={14} />
               <span>Record Offline Payment</span>
@@ -284,7 +290,7 @@ export default function TransactionsPage() {
           <Tooltip content="Refresh transaction logs" position="left">
             <button
               onClick={fetchTransactions}
-              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-amber-500/10 border border-slate-700 hover:border-amber-500/30 text-slate-200 hover:text-amber-400 text-xs font-semibold transition cursor-pointer active:scale-95"
+              className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold transition cursor-pointer active:scale-95"
             >
               <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
               <span>Refresh Data</span>
@@ -296,7 +302,7 @@ export default function TransactionsPage() {
       {/* Analytics Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex justify-between items-center group hover:border-amber-500/30 transition">
+        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-lg flex justify-between items-center group hover:border-primary-500/30 transition">
           <div className="space-y-1">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total SaaS Revenue</p>
             <h3 className="text-2xl font-black text-slate-100 font-mono">₹{stats.totalRevenue}</h3>
@@ -304,7 +310,7 @@ export default function TransactionsPage() {
               <CheckCircle2 size={12} /> Live Paid Collections
             </p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 shadow-inner">
+          <div className="w-12 h-12 rounded-2xl bg-primary-500/10 border border-primary-500/20 text-primary-400 flex items-center justify-center shrink-0 shadow-inner">
             <DollarSign size={24} />
           </div>
         </div>
@@ -355,14 +361,14 @@ export default function TransactionsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search school name, code or Txn ID..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:border-amber-500 transition"
+            className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-500 text-xs focus:outline-none focus:border-primary-500 transition"
           />
         </form>
 
         {/* Custom UI Select Component */}
         <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="flex items-center gap-2 text-xs text-slate-400 shrink-0">
-            <Filter size={14} className="text-amber-400" />
+            <Filter size={14} className="text-primary-400" />
             <span>Status Filter:</span>
           </div>
           <Select
@@ -463,7 +469,7 @@ export default function TransactionsPage() {
           {/* Plan & Resource Capacity */}
           <div className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/90 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-primary-400">
                 Subscription & Capacity Allocation
               </span>
               <span className="text-[11px] text-slate-500 font-medium">Applied instantly</span>

@@ -76,7 +76,7 @@ export default function Drawer({
           <div className="shrink-0 px-6 py-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90 backdrop-blur-md">
             <div className="flex items-center gap-3.5">
               {Icon && (
-                <div className="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shrink-0">
+                <div className="p-2.5 rounded-2xl bg-primary-500/10 border border-primary-500/20 text-primary-400 shrink-0">
                   <Icon size={20} />
                 </div>
               )}

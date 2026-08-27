@@ -70,7 +70,7 @@ export default function PrintableInvoiceModal({ isOpen, onClose, transaction }) 
           <div className="flex items-center space-x-3">
             <button
               onClick={handlePrint}
-              className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-xs transition shadow-lg shadow-amber-500/20 cursor-pointer active:scale-95"
+              className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 text-white font-semibold text-xs transition shadow-lg shadow-primary-500/25 cursor-pointer active:scale-95"
             >
               <Printer size={16} />
               <span>Print / Download PDF</span>
@@ -95,13 +95,13 @@ export default function PrintableInvoiceModal({ isOpen, onClose, transaction }) 
                 {systemSettings?.logo_url ? (
                   <img src={systemSettings.logo_url.startsWith('http') ? systemSettings.logo_url : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${systemSettings.logo_url}`} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-md" />
                 ) : (
-                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950 shadow-md">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center font-black text-white shadow-md shadow-primary-500/20">
                     <ShieldCheck size={24} />
                   </div>
                 )}
                 <div>
-                  <h1 className="text-xl font-extrabold tracking-tight text-slate-100 print:text-slate-900">{systemSettings?.company_name || 'EduSchool SaaS Cloud'}</h1>
-                  <p className="text-xs text-amber-400 font-semibold print:text-slate-600">{systemSettings?.tagline || 'Enterprise School Management Suite'}</p>
+                  <h1 className="text-xl font-extrabold tracking-tight text-slate-100 print:text-slate-900">{systemSettings?.company_name || 'Vidyadmin SaaS Cloud'}</h1>
+                  <p className="text-xs text-primary-400 font-semibold">{systemSettings?.tagline || 'Simplifying Education, Empowering Admins'}</p>
                 </div>
               </div>
               <p className="text-xs text-slate-400 print:text-slate-600 pt-2">

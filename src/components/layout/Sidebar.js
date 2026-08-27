@@ -15,7 +15,8 @@ import {
   Receipt,
   Radio,
   Settings,
-  Layers
+  Layers,
+  MessageSquareQuote
 } from 'lucide-react';
 import { adminLogoutAction } from '@/actions/authActions';
 import ConfirmModal from '@/components/ui/ConfirmModal';
@@ -92,6 +93,7 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
 
   const navItems = [
     { label: 'Overview', href: '/dashboard', icon: Activity },
+    { label: 'Inquiries & Demo Leads', href: '/inquiries', icon: MessageSquareQuote },
     { label: 'Schools Management', href: '/schools', icon: School },
     { label: 'Packages & Modules', href: '/packages', icon: Layers },
     { label: 'Students Management', href: '/students', icon: GraduationCap },

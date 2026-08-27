@@ -20,7 +20,7 @@ import {
   Check
 } from 'lucide-react';
 import Link from 'next/link';
-import InvoiceSkeleton from '@/components/transactions/InvoiceSkeleton';
+import InvoiceSkeleton from '@/components/skeletons/InvoiceSkeleton';
 
 export default function InvoiceDetailPage() {
   const router = useRouter();
@@ -54,7 +54,7 @@ export default function InvoiceDetailPage() {
 
       if (data.success && data.data) {
         const found = data.data.find(
-          (t) => String(t.id) === String(id) || String(t.gateway_transaction_id) === String(id) || String(t.invoice?.invoice_number) === String(id)
+          (t) => String(t.uuid) === String(id) || String(t.id) === String(id) || String(t.gateway_transaction_id) === String(id) || String(t.invoice?.invoice_number) === String(id)
         );
         if (found) {
           setTransaction(found);
@@ -155,16 +155,8 @@ export default function InvoiceDetailPage() {
 
         <div className="flex items-center space-x-2 self-end sm:self-auto">
           <button
-            onClick={handleCopyLink}
-            className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition border border-slate-700"
-          >
-            {copied ? <Check size={15} className="text-emerald-400" /> : <Copy size={15} />}
-            <span>{copied ? 'Copied Link' : 'Share'}</span>
-          </button>
-
-          <button
             onClick={handlePrint}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs transition shadow-lg shadow-amber-500/20 cursor-pointer active:scale-95"
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 text-white font-bold text-xs transition shadow-lg shadow-primary-500/25 cursor-pointer active:scale-95"
           >
             <Printer size={16} />
             <span>Print / Save PDF</span>
@@ -187,13 +179,13 @@ export default function InvoiceDetailPage() {
                   {systemSettings?.logo_url ? (
                     <img src={systemSettings.logo_url.startsWith('http') ? systemSettings.logo_url : `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000'}${systemSettings.logo_url}`} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-md print:shadow-none" />
                   ) : (
-                    <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-slate-950 shadow-md print:bg-amber-500 print:text-slate-950">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center font-black text-white shadow-md shadow-primary-500/20">
                       <ShieldCheck size={24} />
                     </div>
                   )}
                   <div>
-                    <h1 className="text-lg font-extrabold tracking-tight text-slate-100 print:text-slate-900">{systemSettings?.company_name || 'EduSchool SaaS Cloud'}</h1>
-                    <p className="text-xs text-amber-400 font-semibold print-amber-text">{systemSettings?.tagline || 'Enterprise School Management Suite'}</p>
+                    <h1 className="text-lg font-extrabold tracking-tight text-slate-100 print:text-slate-900">{systemSettings?.company_name || 'Vidyadmin SaaS Cloud'}</h1>
+                    <p className="text-xs text-primary-400 font-semibold">{systemSettings?.tagline || 'Simplifying Education, Empowering Admins'}</p>
                   </div>
                 </div>
                 <p className="text-[11px] text-slate-400 print:text-slate-600 pt-1">

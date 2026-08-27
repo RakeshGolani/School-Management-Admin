@@ -273,7 +273,7 @@ export default function StudentDetailsPage() {
 
       {/* Main Profile Header Card */}
       <Card className="p-6 md:p-8 border-slate-800/80 bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6 relative z-10">
           {/* Avatar */}
@@ -284,7 +284,7 @@ export default function StudentDetailsPage() {
               className="w-28 h-28 rounded-3xl object-cover border-2 border-slate-700 shadow-xl" 
             />
           ) : (
-            <div className="w-28 h-28 rounded-3xl bg-gradient-to-tr from-slate-800 to-slate-700 flex items-center justify-center font-bold text-teal-400 text-3xl border-2 border-slate-700 shadow-xl">
+            <div className="w-28 h-28 rounded-3xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center font-black text-white text-4xl border-2 border-primary-500/30 shadow-xl shadow-primary-500/20">
               {student.first_name ? student.first_name[0].toUpperCase() : 'S'}
             </div>
           )}
@@ -310,7 +310,7 @@ export default function StudentDetailsPage() {
               <span>•</span>
               <span className="font-medium text-slate-300">{student.grade || 'Grade 10'}</span>
               {student.section && (
-                <span className="bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded-md text-xs font-semibold">
+                <span className="bg-primary-500/10 text-primary-400 border border-primary-500/20 px-2.5 py-0.5 rounded-lg text-xs font-bold">
                   Section {student.section}
                 </span>
               )}
@@ -348,7 +348,7 @@ export default function StudentDetailsPage() {
         {/* Personal & Identification Details */}
         <Card className="p-6 border-slate-800/80 bg-slate-900/50 backdrop-blur-md rounded-3xl space-y-4">
           <div className="flex items-center gap-3 pb-3 border-b border-slate-800/80">
-            <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400">
+            <div className="p-2 rounded-xl bg-primary-500/10 text-primary-400 border border-primary-500/20">
               <User className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-slate-100">Personal Information</h3>
@@ -378,7 +378,7 @@ export default function StudentDetailsPage() {
             <div className="flex justify-between py-1 border-b border-slate-800/40">
               <span className="text-slate-400">NFC Smart Card</span>
               {student.nfc_card_uid ? (
-                <span className="font-mono text-xs bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-md font-semibold">
+                <span className="font-mono text-xs bg-primary-500/10 text-primary-400 border border-primary-500/20 px-2 py-0.5 rounded-md font-semibold">
                   {student.nfc_card_uid}
                 </span>
               ) : (
@@ -391,7 +391,7 @@ export default function StudentDetailsPage() {
         {/* Academic Details */}
         <Card className="p-6 border-slate-800/80 bg-slate-900/50 backdrop-blur-md rounded-3xl space-y-4">
           <div className="flex items-center gap-3 pb-3 border-b border-slate-800/80">
-            <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400">
+            <div className="p-2 rounded-xl bg-primary-500/10 text-primary-400 border border-primary-500/20">
               <GraduationCap className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-slate-100">Academic Overview</h3>
@@ -425,7 +425,7 @@ export default function StudentDetailsPage() {
         {/* Parent & Guardian Info */}
         <Card className="p-6 border-slate-800/80 bg-slate-900/50 backdrop-blur-md rounded-3xl space-y-4">
           <div className="flex items-center gap-3 pb-3 border-b border-slate-800/80">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <UserCheck className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-slate-100">Guardian Contact</h3>
@@ -445,7 +445,7 @@ export default function StudentDetailsPage() {
             <div className="flex justify-between py-1 border-b border-slate-800/40">
               <span className="text-slate-400">Primary Phone</span>
               {student.guardian_phone ? (
-                <a href={`tel:${student.guardian_phone}`} className="text-teal-400 hover:underline font-medium">
+                <a href={`tel:${student.guardian_phone}`} className="text-primary-400 hover:underline font-medium">
                   {student.guardian_phone}
                 </a>
               ) : (

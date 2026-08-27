@@ -5,6 +5,7 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { getBillingSettingsAction, updateBillingSettingsAction } from '@/actions/billingActions';
+import BillingSettingsSkeleton from '@/components/skeletons/BillingSettingsSkeleton';
 
 export default function SuperAdminBillingSettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -80,25 +81,21 @@ export default function SuperAdminBillingSettingsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-400 space-y-2 animate-pulse">
-        <CreditCard className="animate-bounce" size={32} />
-        <p className="text-xs font-semibold uppercase tracking-wider">Loading Billing Configurations...</p>
-      </div>
-    );
+    return <BillingSettingsSkeleton />;
   }
 
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <CreditCard className="w-6 h-6" />
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/25 shrink-0">
+            <CreditCard className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-100">Global SaaS Billing Configurations</h1>
-            <p className="text-xs text-slate-400 mt-1">Configure pricing rates, seat taxes, and yearly subscription discounts dynamically.</p>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">Global SaaS Billing Configurations</h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">Configure pricing rates, seat taxes, and yearly subscription discounts dynamically.</p>
           </div>
         </div>
       </div>
@@ -122,7 +119,7 @@ export default function SuperAdminBillingSettingsPage() {
           {/* Monthly Subscriptions Card */}
           <Card className="bg-slate-900/80 border border-slate-800/80 p-6 space-y-5">
             <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <div className="w-10 h-10 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400">
                 <CreditCard size={20} />
               </div>
               <div>
