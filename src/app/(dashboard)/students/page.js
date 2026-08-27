@@ -28,6 +28,7 @@ import DataTable from '@/components/ui/DataTable';
 import FormPhoneInput from '@/components/FormPhoneInput';
 import Tooltip from '@/components/ui/Tooltip';
 import Select from '@/components/ui/Select';
+import Checkbox from '@/components/ui/Checkbox';
 import { 
   getStudentsAction, 
   createStudentAction, 
@@ -737,15 +738,12 @@ export default function StudentsManagementPage() {
             />
 
             <div className="flex items-center pt-6">
-              <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-300 font-medium">
-                <input
-                  type="checkbox"
-                  checked={formData.is_bus_service_enabled}
-                  onChange={(e) => setFormData({ ...formData, is_bus_service_enabled: e.target.checked })}
-                  className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-amber-500/20"
-                />
-                Enable Bus Transport
-              </label>
+              <Checkbox
+                id="enable-bus-transport"
+                checked={formData.is_bus_service_enabled}
+                onChange={(e) => setFormData({ ...formData, is_bus_service_enabled: e.target.checked })}
+                label="Enable Bus Transport"
+              />
             </div>
           </div>
 

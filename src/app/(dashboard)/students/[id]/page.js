@@ -27,6 +27,7 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import Select from '@/components/ui/Select';
+import Checkbox from '@/components/ui/Checkbox';
 import { 
   getStudentByIdAction, 
   updateStudentAction, 
@@ -624,15 +625,12 @@ export default function StudentDetailsPage() {
             />
 
             <div className="flex items-center pt-6">
-              <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-300 font-medium">
-                <input
-                  type="checkbox"
-                  checked={formData.is_bus_service_enabled}
-                  onChange={(e) => setFormData({ ...formData, is_bus_service_enabled: e.target.checked })}
-                  className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-amber-500/20"
-                />
-                Enable Bus Transport
-              </label>
+              <Checkbox
+                id="edit-enable-bus-transport"
+                checked={formData.is_bus_service_enabled}
+                onChange={(e) => setFormData({ ...formData, is_bus_service_enabled: e.target.checked })}
+                label="Enable Bus Transport"
+              />
             </div>
           </div>
 
