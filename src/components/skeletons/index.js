@@ -13,3 +13,4 @@ export { default as BillingSettingsSkeleton } from './BillingSettingsSkeleton';
 export { default as SystemSettingsSkeleton } from './SystemSettingsSkeleton';
 export { default as ProfileSkeleton } from './ProfileSkeleton';
 export { default as SocketLogsSkeleton } from './SocketLogsSkeleton';
+export { default as PlanSkeleton } from './PlanSkeleton';

@@ -594,6 +594,11 @@ export default function SchoolsManagementPage() {
                       <div className="flex items-center justify-between">
                         <h4 className="text-sm font-bold text-slate-100 flex items-center gap-2">
                           {pkg.name}
+                          {pkg.monthly_price > 0 && (
+                            <span className="text-[11px] font-bold text-emerald-400">
+                              (₹{(pkg.monthly_price).toLocaleString('en-IN')}/mo)
+                            </span>
+                          )}
                         </h4>
                         {isSelected && (
                           <span className="text-amber-400">
