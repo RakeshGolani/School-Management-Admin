@@ -35,7 +35,7 @@ import {
   deleteSchoolAction, 
   toggleSchoolStatusAction 
 } from '@/actions/schoolActions';
-import { getPackagesAction } from '@/actions/packageActions';
+import { getPlansAction } from '@/actions/planActions';
 import { notifySuccess, notifyError } from '@/lib/notify';
 import { handleStatusToggle } from '@/lib/commonHandlers';
 import SchoolTableSkeleton from '@/components/skeletons/SchoolTableSkeleton';
@@ -70,9 +70,9 @@ export default function SchoolsManagementPage() {
   const fetchSchools = async () => {
     setLoading(true);
     try {
-      const [schoolsRes, packagesRes] = await Promise.all([
+      const [schoolsRes, plansRes] = await Promise.all([
         getSchoolsAction(),
-        getPackagesAction()
+        getPlansAction()
       ]);
 
       if (schoolsRes.success && Array.isArray(schoolsRes.data)) {
@@ -81,8 +81,8 @@ export default function SchoolsManagementPage() {
         setSchools([]);
       }
 
-      if (packagesRes.success && Array.isArray(packagesRes.data?.packages)) {
-        setPackages(packagesRes.data.packages);
+      if (plansRes.success && Array.isArray(plansRes.data?.plans || plansRes.data?.packages)) {
+        setPackages(plansRes.data.plans || plansRes.data.packages);
       }
     } catch (err) {
       notifyError('Failed to fetch data');

@@ -28,7 +28,6 @@ export async function updatePlanAction(id, planData) {
     const data = await res.json();
     if (data.success) {
       revalidatePath('/plans');
-      revalidatePath('/packages');
       revalidatePath('/schools');
     }
     return data;

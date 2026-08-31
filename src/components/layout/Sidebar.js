@@ -105,7 +105,6 @@ export default function Sidebar({ isCollapsed = false, onToggleSidebar, mobileOp
     { label: 'Overview', href: '/dashboard', icon: Activity },
     { label: 'Inquiries & Demo Leads', href: '/inquiries', icon: MessageSquareQuote },
     { label: 'Schools Management', href: '/schools', icon: School },
-    { label: 'Packages & Modules', href: '/packages', icon: Boxes },
     { label: 'Subscription Plans', href: '/plans', icon: Sparkles },
     { label: 'Teachers & Faculty', href: '/teachers', icon: Users },
     { label: 'Students Management', href: '/students', icon: GraduationCap },

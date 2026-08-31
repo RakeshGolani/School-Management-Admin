@@ -200,16 +200,18 @@ export default function DataTable({
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
             <div className="flex items-center space-x-2">
               <span>Show</span>
-              <Select
-                value={pageSize}
-                onChange={(val) => {
-                  setPageSize(Number(val));
-                  setCurrentPage(1);
-                }}
-                options={pageSizeOptions}
-                triggerClassName="w-16 py-1.5 px-3 border-slate-700 bg-slate-800/80 text-slate-200"
-                dropdownClassName="w-16"
-              />
+              <div className="w-[70px]">
+                <Select
+                  value={pageSize}
+                  onChange={(val) => {
+                    setPageSize(Number(val));
+                    setCurrentPage(1);
+                  }}
+                  options={pageSizeOptions}
+                  size="sm"
+                  triggerClassName="border-slate-700 bg-slate-800/80 text-slate-200"
+                />
+              </div>
               <span>entries</span>
             </div>
             <div className="text-[11px] text-slate-500 font-medium">

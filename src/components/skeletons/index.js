@@ -5,7 +5,6 @@ export { default as TeacherTableSkeleton } from './TeacherTableSkeleton';
 export { default as TeacherDetailsSkeleton } from './TeacherDetailsSkeleton';
 export { default as StudentTableSkeleton } from './StudentTableSkeleton';
 export { default as StudentDetailsSkeleton } from './StudentDetailsSkeleton';
-export { default as PackageSkeleton } from './PackageSkeleton';
 export { default as TransactionSkeleton } from './TransactionSkeleton';
 export { default as InvoiceSkeleton } from './InvoiceSkeleton';
 export { default as InquirySkeleton } from './InquirySkeleton';

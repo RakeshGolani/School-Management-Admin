@@ -94,7 +94,7 @@ export default function Select({
       setMenuCoords({
         top: Math.max(8, top),
         left: rect.left,
-        width: Math.max(rect.width, 220)
+        width: rect.width < 120 ? Math.max(rect.width, 72) : Math.max(rect.width, 200)
       });
     }
   };
@@ -195,9 +195,9 @@ export default function Select({
             : isOpen 
               ? 'border-primary-500 ring-2 ring-primary-500/20' 
               : 'border-slate-800 hover:border-slate-700'
-        } rounded-xl ${size === 'sm' ? 'py-1.5 min-h-[36px]' : 'py-2 min-h-[40px]'} ${
-          Icon ? 'pl-9' : 'pl-3.5'
-        } pr-8 text-xs sm:text-sm text-left transition-all duration-150 ${
+        } rounded-xl ${size === 'sm' ? 'py-1 min-h-[32px] text-xs pr-7 pl-2.5' : 'py-2 min-h-[40px] text-xs sm:text-sm pr-8 pl-3.5'} ${
+          Icon ? '!pl-9' : ''
+        } text-left transition-all duration-150 ${
           disabled ? 'opacity-50 cursor-not-allowed bg-slate-900' : 'cursor-pointer'
         } flex items-center justify-between shadow-xs relative ${triggerClassName}`}
       >
@@ -207,18 +207,28 @@ export default function Select({
           </span>
         )}
 
-        {/* Display Single Selected Label or Placeholder */}
-        <div className="flex flex-wrap items-center gap-1.5 max-w-[calc(100%-24px)] py-0.5">
-          <span className={`block truncate ${selectedOption ? 'text-slate-100 font-medium' : 'text-slate-500'}`}>
-            {selectedOption ? selectedOption.label : placeholder}
-          </span>
+        {/* Display Selected Label or Placeholder */}
+        <div className="flex items-center gap-1.5 flex-1 min-w-0 py-0.5">
+          {multiple ? (
+            selectedOptions.length > 0 ? (
+              <span className="block truncate text-slate-100 font-medium">
+                {selectedOptions.map(o => o.label).join(', ')}
+              </span>
+            ) : (
+              <span className="block truncate text-slate-500">{placeholder}</span>
+            )
+          ) : (
+            <span className={`block truncate ${selectedOption ? 'text-slate-100 font-medium' : 'text-slate-500'}`}>
+              {selectedOption ? selectedOption.label : placeholder}
+            </span>
+          )}
         </div>
 
-        <span className="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1 pointer-events-none">
+        <span className="absolute inset-y-0 right-0 pr-2 flex items-center gap-1 pointer-events-none">
           {clearable && isCustomSelected && (
             <span
               onClick={handleClear}
-              className="p-1 rounded-md text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition cursor-pointer pointer-events-auto flex items-center justify-center"
+              className="p-0.5 rounded-md text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition cursor-pointer pointer-events-auto flex items-center justify-center"
               title="Clear selection"
             >
               <X size={12} />

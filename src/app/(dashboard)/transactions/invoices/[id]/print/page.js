@@ -41,7 +41,12 @@ export default function StandalonePrintInvoicePage() {
         
         if (data.success && data.data) {
           const found = data.data.find(
-            (t) => String(t.id) === String(id) || String(t.gateway_transaction_id) === String(id)
+            (t) => String(t.uuid) === String(id) || 
+                   String(t.id) === String(id) || 
+                   String(t.gateway_transaction_id) === String(id) || 
+                   String(t.reference_number) === String(id) || 
+                   String(t.invoice?.invoice_number) === String(id) || 
+                   String(t.invoice?.id) === String(id)
           );
           if (found) {
             setTransaction(found);
